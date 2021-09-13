@@ -1,6 +1,0 @@
-DROP TABLE IF EXISTS decks;
-
-CREATE TABLE decks (
-    id_deck INTEGER PRIMARY KEY AUTOINCREMENT,
-    nm_deck text NOT NULL
-)

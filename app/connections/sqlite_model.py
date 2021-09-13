@@ -21,6 +21,8 @@ Functions which expect MYSQL_RES * as an argument are now methods of the result
 object. Deprecated functions (as of 3.23) are NOT implemented.
 """
 import sqlite3
+import traceback
+
 from app.connections.errors import ExecuteQueryFailed, InsertFailed
 
 
@@ -34,6 +36,10 @@ class SqliteModelConnection:  # pragma: no cover
         self.database = kwargs.get("database")
         self.conn = sqlite3.connect(database=self.database)
         self.cursor = self.conn.cursor
+
+        sql_file = open("database.sql")
+        sql_as_string = sql_file.read()
+        self.conn.executescript(sql_as_string)
 
     def commit(self):
         """
@@ -74,11 +80,10 @@ class SqliteModelConnection:  # pragma: no cover
 
             sql = "INSERT INTO %s (%s) VALUES %s" % (table, columns, values)
 
-            cursor = self.query(sql, params=values)
+            cursor = self.query(sql)
 
         except Exception as error:
-            code, message = error.args
-            raise InsertFailed({"code": code, "message": message, "table": table}) from error
+            raise error
 
         return cursor.lastrowid
 
@@ -143,5 +148,7 @@ class SqliteModelConnection:  # pragma: no cover
         :return: columns, values
         """
         columns_str = ", ".join(columns)
-        values_str = ",".join(["('%s')" % v for v in values])
+        values_str = ""
+        for value in values:
+            values_str += "(%s)" % ", ".join(["'%s'" % x for x in value])
         return columns_str, values_str
