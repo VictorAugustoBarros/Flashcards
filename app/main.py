@@ -1,15 +1,26 @@
+"""Main."""
+import click
 from app.connections.sqlite_conn import SqliteConn
-from app.models.cards_model import CardsModel
-from app.models.application import Application
+from app.views.main_view import MainView
 
-sqlite_conn = SqliteConn()
 
-cards_model = CardsModel(sqlite_conn=sqlite_conn)
-cards_model.insert_new_card(word_jp="ネコ", word_br="Gato")
-cards_model.insert_new_card(word_jp="ネコ", word_br="Gato")
+@click.command()
+def run():
+    """Função de start do processo."""
+    sqlite_conn = SqliteConn()
+    sqlite_conn.initialize_db()
 
-all_cards = cards_model.show_cards()
+    from app.models.tables.cards_models import CardsModel
 
-application = Application(cards=all_cards)
+    cards_model = CardsModel(sqlite_conn=sqlite_conn)
+    cards_model.insert_new_card(word_jp="ネコ", word_br="Gato")
+    cards_model.insert_new_card(word_jp="コ", word_br="Cachorro")
+    cards_model.insert_new_card(word_jp="コネ", word_br="Cobra")
+    sqlite_conn.commit()
 
-application.root.mainloop()
+    start_view = MainView()
+    start_view.mainloop()
+
+
+if __name__ == "__main__":
+    run()

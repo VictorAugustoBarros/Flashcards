@@ -21,9 +21,8 @@ Functions which expect MYSQL_RES * as an argument are now methods of the result
 object. Deprecated functions (as of 3.23) are NOT implemented.
 """
 import sqlite3
-import traceback
-
-from app.connections.errors import ExecuteQueryFailed, InsertFailed
+import os
+from app.connections.errors import ExecuteQueryFailed
 
 
 class SqliteModelConnection:  # pragma: no cover
@@ -37,7 +36,12 @@ class SqliteModelConnection:  # pragma: no cover
         self.conn = sqlite3.connect(database=self.database)
         self.cursor = self.conn.cursor
 
-        sql_file = open("database.sql")
+    def initialize_db(self):
+        """Criação do banco de dados Sqlite executando o script .sql."""
+        try:
+            sql_file = open("connections/scripts/database.sql")
+        except:
+            sql_file = open("app/connections/scripts/database.sql")
         sql_as_string = sql_file.read()
         self.conn.executescript(sql_as_string)
 
@@ -56,7 +60,13 @@ class SqliteModelConnection:  # pragma: no cover
         """Fechar conexão."""
         self.conn.close()
 
-    def query(self, sql: str, params=()):
+    def query(self, sql: str, params: tuple = ()):
+        """Executa a query *sql*.
+
+        Args:
+            sql (str): Query a ser executada.
+            params (tuple): Parametros a ser substituidos na query.
+        """
         try:
             self.cursor = self.conn.cursor()
             self.cursor.execute(sql)
@@ -88,14 +98,14 @@ class SqliteModelConnection:  # pragma: no cover
         return cursor.lastrowid
 
     def select(
-            self,
-            table: str,
-            fields=(),
-            distinct=False,
-            where=None,
-            group=None,
-            order=None,
-            limit=None,
+        self,
+        table: str,
+        fields=(),
+        distinct=False,
+        where=None,
+        group=None,
+        order=None,
+        limit=None,
     ):
         """
         Executa um select baseado nos parametros enviados.

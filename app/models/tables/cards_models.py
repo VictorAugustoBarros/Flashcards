@@ -1,4 +1,5 @@
-from app.models.model import Model
+"""Card Models."""
+from app.models.tables.model import Model
 
 
 class CardsModel(Model):
@@ -11,21 +12,17 @@ class CardsModel(Model):
     word_jp = str()
     word_br = str()
 
-    def show_cards(self):
-        all_cards = {}
-        cards = self.fetch_all(table=self._table)
-        for card in cards:
-            id_card = card[0]
-            word_jp = card[1]
-            word_br = card[2]
-            all_cards[id_card] = {
-                "jp": word_jp,
-                "br": word_br
-            }
-
-        return all_cards
+    def get_all_cards(self):
+        """Busca de todos os cards inseridos na tabela."""
+        return self.fetch_all(table=self._table)
 
     def insert_new_card(self, word_jp: str, word_br: str):
+        """Inserção de um novo card na tabela cards.
+
+        Args:
+            word_jp (str): Palavra em Japonês
+            word_br (str): Palavra em Portugues
+        """
         result = self._insert_fields(columns=("word_jp", "word_br"), values=[(word_jp, word_br)])
         if result:
             return True

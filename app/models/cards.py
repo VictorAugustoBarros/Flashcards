@@ -1,22 +1,38 @@
-from tkinter import *
+"""Cards Model."""
 
 
 class Cards:
-    def __init__(self, main_frame, text_jp: str, text_br: str):
-        self.main_frame = main_frame
+    """Classe Model dos Cards."""
+
+    def __init__(self, canvas, text_jp: str, text_br: str):
+        """Construtor da classe.
+
+        Args:
+            canvas ():
+            text_jp (str): Palavra em Japonês
+            text_br (str): Palavra em Português
+        """
+        self.canvas = canvas
         self.text_jp = text_jp
         self.text_br = text_br
-
         self.button_text = None
-        self.canvas = None
+        self.card_ptbr = False
 
     def create_card(self):
-        self.canvas = Canvas(self.main_frame, width=300, height=300)
-        self.canvas.pack()
-
-        self.canvas.create_rectangle(0, 0, 100, 30, fill="grey40", outline="grey60")
-        self.button_text = self.canvas.create_text(50, 15, text=self.text_jp)
+        """Criação do Card na tela."""
+        self.canvas.create_rectangle(0, 550, 300, 450, fill="grey40", outline="grey60")
+        self.button_text = self.canvas.create_text(150, 500, text=self.text_jp, font=("Arial", 30))
         self.canvas.tag_bind(self.button_text, "<Button-1>", self.click)
 
     def click(self, event):
-        self.canvas.itemconfig(self.button_text, text=self.text_br)
+        """Função para virar o card com a tradução do texto.
+
+        Args:
+            event ():
+        """
+        if self.card_ptbr:
+            self.canvas.itemconfig(self.button_text, text=self.text_jp)
+            self.card_ptbr = False
+        else:
+            self.canvas.itemconfig(self.button_text, text=self.text_br)
+            self.card_ptbr = True

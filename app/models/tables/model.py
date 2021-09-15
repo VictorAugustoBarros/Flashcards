@@ -1,7 +1,6 @@
 """Interface modelo das tabelas do Sqlite3."""
 import sqlite3
-from app.connections.errors import DeleteFailed, ExecuteQueryFailed, ConnectionFailed, InsertFailed, UpdateFailed, \
-    ProgrammingError, OperationalError
+from app.connections.errors import InsertFailed
 
 
 class Model:  # pragma: no cover
@@ -25,9 +24,7 @@ class Model:  # pragma: no cover
             resultado ou raise InsertFailed exceção
         """
         try:
-            result = self.sqlite_conn.insert_fields(
-                table=self._table, columns_insert=columns, values_insert=values
-            )
+            result = self.sqlite_conn.insert_fields(table=self._table, columns_insert=columns, values_insert=values)
         except InsertFailed as error:
             raise error
 
@@ -36,14 +33,24 @@ class Model:  # pragma: no cover
     def fetch_all(
         self,
         table: str,
-        fields="*",
+        fields: str = "*",
         where=None,
         distinct=False,
         group=None,
         order=None,
         limit=None,
     ):
+        """Busca de todos os registros.
 
+        Args:
+            table (str): Tabela a ser executada a busca dos dados
+            fields (str): Colunas a ser retornada na busca
+            where (): Condição WHERE da query
+            distinct (): Busca dos registros únicos
+            group ():
+            order ():
+            limit ():
+        """
         if limit is None:
             limit = [1000]
 

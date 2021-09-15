@@ -1,9 +1,10 @@
+"""Sqlite Connection."""
 from app.connections.sqlite_model import SqliteModelConnection
 
 
 class SqliteConn(SqliteModelConnection):
-    """Classe com conexão para o banco de Sms."""
+    """Classe com conexão para o SQLite3."""
 
     def __init__(self):
-        """Construtor da class SmsMysql."""
-        super().__init__(database="flashcards")
+        """Construtor da classe."""
+        super().__init__(database="flashcards.db")
