@@ -21,7 +21,6 @@ Functions which expect MYSQL_RES * as an argument are now methods of the result
 object. Deprecated functions (as of 3.23) are NOT implemented.
 """
 import sqlite3
-import os
 from app.connections.errors import ExecuteQueryFailed
 
 

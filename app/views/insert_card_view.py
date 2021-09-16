@@ -1,10 +1,10 @@
 """Cards View."""
 import tkinter as tk
-from app.connections.mongodb import Mongodb
+from app.connections.sqlite_conn import SqliteConn
 from app.controllers.cards_controller import CardsController
 
 
-class CardsView(tk.Frame):
+class InsertCardsView(tk.Frame):
     """Classe Cards View."""
 
     def __init__(self, master):
@@ -21,7 +21,7 @@ class CardsView(tk.Frame):
 
         self.create_interface()
 
-        self.cards_controller = CardsController(mongodb=Mongodb(), canvas=self.canvas)
+        self.cards_controller = CardsController(sqlite_conn=SqliteConn(), canvas=self.canvas)
         self.cards_controller.generate_card()
 
     def create_interface(self):
@@ -29,7 +29,7 @@ class CardsView(tk.Frame):
         # Frames
         self.frames = self.create_frames()
         # Canvas
-        self.canvas = self.create_canvas(frame=self.frames["card_frame"], width=500, height=900)
+        self.canvas = self.create_canvas(frame=self.frames["card_frame"], width=300, height=900)
         # Buttons
         self.buttons = self.create_buttons(frame=self.frames["buttons_frame"])
 
@@ -55,7 +55,7 @@ class CardsView(tk.Frame):
             height (int): Altura do Canvas
         """
         canvas = tk.Canvas(frame, width=width, height=height)
-        canvas.grid(row=0, columnspan=5)
+        canvas.pack()
 
         return canvas
 
@@ -80,7 +80,9 @@ class CardsView(tk.Frame):
 
         button_menu = tk.Button(frame, text="Menu", command=lambda: self.master.switch_frame())
         button_menu.grid(row=5, column=3)
-
+        """
+        <class 'app.views.start_view.StartView'>
+        """
         return buttons
 
     def reset_words(self):

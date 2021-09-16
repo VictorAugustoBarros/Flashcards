@@ -1,5 +1,7 @@
 """Cards Controller."""
-from app.connections.sqlite_conn import SqliteConn
+import tkinter.messagebox
+
+from app.connections.mongodb import Mongodb
 from app.models.tables.cards_models import CardsModel
 from app.models.cards import Cards
 import random
@@ -8,14 +10,13 @@ import random
 class CardsController:
     """Classe para controle dos Cards."""
 
-    def __init__(self, sqlite_conn: SqliteConn, canvas):
+    def __init__(self, mongodb: Mongodb, canvas):
         """Construtor da classe.
 
         Args:
-            sqlite_conn (SqliteConn):
             canvas ():
         """
-        self.sqlite_conn = sqlite_conn
+        self.mongodb = mongodb
         self.canvas = canvas
 
         self.previous_card = None
@@ -26,15 +27,13 @@ class CardsController:
 
     def get_cards(self):
         """Busca de todos os cards cadastrados."""
-        all_cards = []
-        cards_model = CardsModel(sqlite_conn=self.sqlite_conn)
-        cards = cards_model.get_all_cards()
-        for card in cards:
-            word_jp = card[1]
-            word_br = card[2]
-            all_cards.append({"jp": word_jp, "br": word_br})
+        mongodb = Mongodb()
+        cards = mongodb.select_all("words")
 
-        return all_cards
+        list_cards = []
+        for card in cards:
+            list_cards.append(card)
+        return list_cards
 
     @staticmethod
     def sort_cards(cards: list):
@@ -77,6 +76,7 @@ class CardsController:
         self.next_card = self.current_card + 1
 
         if self.next_card == len(self.cards):
+            tkinter.messagebox.showinfo(title="Cards", message="Parabéns, cards finalizados.")
             buttons["button_previous"] = "normal"
             buttons["button_next"] = "disabled"
             return buttons
@@ -97,5 +97,5 @@ class CardsController:
     def generate_card(self):
         """Geração do Card Atual."""
         card = self.get_current_card()
-        card_model = Cards(canvas=self.canvas, text_jp=card.get("jp"), text_br=card.get("br"))
+        card_model = Cards(canvas=self.canvas, text_jp=card.get("jp_write"), text_br=card.get("pt"))
         card_model.create_card()

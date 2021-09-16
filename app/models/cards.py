@@ -20,8 +20,8 @@ class Cards:
 
     def create_card(self):
         """Criação do Card na tela."""
-        self.canvas.create_rectangle(0, 550, 300, 450, fill="grey40", outline="grey60")
-        self.button_text = self.canvas.create_text(150, 500, text=self.text_jp, font=("Arial", 30))
+        self.canvas.create_rectangle(0, 550, 500, 450, fill="grey40", outline="grey60")
+        self.button_text = self.canvas.create_text(250, 500, text=self.text_jp, font=("Arial", 30))
         self.canvas.tag_bind(self.button_text, "<Button-1>", self.click)
 
     def click(self, event):
