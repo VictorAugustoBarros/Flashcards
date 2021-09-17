@@ -1,9 +1,9 @@
 """Main."""
 import click
 from app.views.main_view import MainView
-from start import Start_Window
+from app.views.start_window import Start_Window
 
-from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QApplication
 import sys
 

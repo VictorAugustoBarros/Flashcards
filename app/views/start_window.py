@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'app/start.ui'
+# Form implementation generated from reading ui file 'app/ui_files/start_screen.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.4
 #
@@ -14,28 +14,41 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Start_Window(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(500, 500)
+        MainWindow.setFixedSize(800, 600)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.label = QtWidgets.QLabel(self.centralwidget)
-        self.label.setGeometry(QtCore.QRect(230, 40, 311, 41))
+        self.label.setGeometry(QtCore.QRect(240, 50, 331, 71))
         font = QtGui.QFont()
-        font.setFamily("Arial")
+        font.setFamily("Comic Sans MS")
         font.setPointSize(30)
+        font.setBold(True)
+        font.setItalic(True)
+        font.setUnderline(False)
+        font.setWeight(75)
+        font.setStrikeOut(False)
         self.label.setFont(font)
         self.label.setObjectName("label")
         self.pushButton = QtWidgets.QPushButton(self.centralwidget)
-        self.pushButton.setGeometry(QtCore.QRect(320, 420, 141, 61))
+        self.pushButton.setGeometry(QtCore.QRect(340, 420, 141, 61))
         self.pushButton.setObjectName("pushButton")
         self.pushButton_2 = QtWidgets.QPushButton(self.centralwidget)
-        self.pushButton_2.setGeometry(QtCore.QRect(10, 470, 101, 25))
+        self.pushButton_2.setGeometry(QtCore.QRect(10, 480, 101, 25))
         self.pushButton_2.setObjectName("pushButton_2")
         self.pushButton_3 = QtWidgets.QPushButton(self.centralwidget)
-        self.pushButton_3.setGeometry(QtCore.QRect(10, 510, 101, 25))
+        self.pushButton_3.setGeometry(QtCore.QRect(10, 520, 101, 25))
         self.pushButton_3.setObjectName("pushButton_3")
+        self.label_2 = QtWidgets.QLabel(self.centralwidget)
+        self.label_2.setGeometry(QtCore.QRect(-10, 0, 801, 581))
+        self.label_2.setObjectName("label_2")
+        self.label_2.raise_()
+        self.label.raise_()
+        self.pushButton.raise_()
+        self.pushButton_2.raise_()
+        self.pushButton_3.raise_()
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 800, 22))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 800, 21))
         self.menubar.setObjectName("menubar")
         MainWindow.setMenuBar(self.menubar)
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
@@ -52,10 +65,5 @@ class Start_Window(object):
         self.pushButton.setText(_translate("MainWindow", "Start"))
         self.pushButton_2.setText(_translate("MainWindow", "Import Image"))
         self.pushButton_3.setText(_translate("MainWindow", "New Card"))
-
-
-
-
-
-if __name__ == '__main__':
-    main()
+        self.label_2.setText(
+            _translate("MainWindow", "<html><head/><body><p><img src=\"images/bg_walppaper.jpg\"/></p></body></html>"))

@@ -4,3 +4,5 @@ pytesseract
 python-dotenv
 click
 pymongo
+pyqt5
+pyocr
