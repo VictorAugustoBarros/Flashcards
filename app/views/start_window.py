@@ -66,4 +66,5 @@ class Start_Window(object):
         self.pushButton_2.setText(_translate("MainWindow", "Import Image"))
         self.pushButton_3.setText(_translate("MainWindow", "New Card"))
         self.label_2.setText(
-            _translate("MainWindow", "<html><head/><body><p><img src=\"images/bg_walppaper.jpg\"/></p></body></html>"))
+            _translate("MainWindow", '<html><head/><body><p><img src="images/bg_walppaper.jpg"/></p></body></html>')
+        )
