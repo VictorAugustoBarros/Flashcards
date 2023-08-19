@@ -40,6 +40,7 @@ import { ADD_USER } from "@/graphql/users";
 const client = new GraphQLClient("http://localhost:8000/graphql");
 
 export default {
+  name: "RegisterForm",
   setup() {
     return { v$: useVuelidate() };
   },
@@ -68,7 +69,9 @@ export default {
         password: this.password,
       };
       const data = await client.request(ADD_USER, variables);
-      console.log(data);
+      const response = data.add_user.response;
+
+      console.log(response);
     },
   },
 };

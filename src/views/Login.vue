@@ -1,9 +1,9 @@
 <template>
-  <h1>Buenas Noites</h1>
+  Carregar Formulario login
 </template>
 
 <script>
 export default {
-  name: "HomePage",
+  name: "LoginPage",
 };
 </script>
