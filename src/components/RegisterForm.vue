@@ -37,7 +37,10 @@ import { email, required } from "@vuelidate/validators";
 import { GraphQLClient } from "graphql-request";
 
 import { ADD_USER } from "@/graphql/users";
-const client = new GraphQLClient("http://localhost:8000/graphql");
+
+import { graphqlUrl } from "@/store/constants";
+
+const client = new GraphQLClient(graphqlUrl);
 
 export default {
   name: "RegisterForm",

@@ -8,8 +8,18 @@ const routes = [
     children: [
       {
         path: "",
-        name: "Register",
-        component: () => import("@/views/Register.vue"),
+        name: "Home",
+        component: () => import("@/views/Home.vue"),
+      },
+      {
+        path: "decks",
+        name: "Decks",
+        component: () => import("@/views/Decks.vue"),
+      },
+      {
+        path: "cards",
+        name: "Cards",
+        component: () => import("@/views/Cards.vue"),
       },
     ],
   },
@@ -41,18 +51,28 @@ const router = createRouter({
 });
 
 // Middleware para verificar a autenticação
-router.beforeEach((to, from, next) => {
-  const isAuthenticated = true
-  
-  if (to.path !== '/login' && !isAuthenticated) {
-    next('/login');
-    
-  }else if  (to.path == "/login" && isAuthenticated ) {
-    next('/');
 
+import { useAuthStore } from "@/store/app";
+
+router.beforeEach((to, from, next) => {
+  const authStore = useAuthStore();
+  const isAuthenticated = authStore.hasToken;
+
+  if (to.path !== "/login" && to.path !== "/register" && !isAuthenticated) {
+    next("/login");
+  } else if (to.path === "/login" && isAuthenticated) {
+    next("/");
+  } else if (to.path === "/login" && !isAuthenticated) {
+    next();
+  } else if (to.path !== "/login" && isAuthenticated) {
+    const validToken = authStore.validateToken();
+    if (!validToken) {
+      next("/login");
+      return;
+    }
+    next();
   } else {
     next();
   }
 });
-
 export default router;
