@@ -27,11 +27,10 @@ import router from "@/router";
 
 import { useVuelidate } from "@vuelidate/core";
 import { email, required } from "@vuelidate/validators";
-import { GraphQLClient } from "graphql-request";
 import { useAuthStore } from "@/store/app";
-import { LOGIN_USER } from "@/graphql/users";
-import { graphqlUrl } from "@/store/constants";
-const client = new GraphQLClient(graphqlUrl);
+
+import { LOGIN_USER } from "@/services/users";
+import { graphqlClient } from "@/store/constants";
 
 export default {
   name: "LoginPage",
@@ -51,6 +50,7 @@ export default {
       password: { required },
     };
   },
+
   methods: {
     async login() {
       const isFormCorrect = await this.v$.$validate();
@@ -61,7 +61,7 @@ export default {
         username: this.username,
         password: this.password,
       };
-      const data = await client.request(LOGIN_USER, variables);
+      const data = await graphqlClient.request(LOGIN_USER, variables);
       const response = data.login.response;
 
       if (response.success) {

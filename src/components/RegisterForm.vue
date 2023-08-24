@@ -36,7 +36,7 @@ import { useVuelidate } from "@vuelidate/core";
 import { email, required } from "@vuelidate/validators";
 import { GraphQLClient } from "graphql-request";
 
-import { ADD_USER } from "@/graphql/users";
+import { ADD_USER } from "@/services/users";
 
 import { graphqlUrl } from "@/store/constants";
 
