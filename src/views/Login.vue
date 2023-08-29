@@ -28,9 +28,7 @@ import router from "@/router";
 import { useVuelidate } from "@vuelidate/core";
 import { email, required } from "@vuelidate/validators";
 import { useAuthStore } from "@/store/app";
-
-import { LOGIN_USER } from "@/services/users";
-import { graphqlClient } from "@/store/constants";
+import { loginUser } from "@/services/users";
 
 export default {
   name: "LoginPage",
@@ -40,8 +38,8 @@ export default {
   data() {
     return {
       authStore: useAuthStore(),
-      email: "teste@teste.com",
-      password: "teste123",
+      email: "victor@gmail.com",
+      password: "admin",
     };
   },
   validations() {
@@ -56,16 +54,10 @@ export default {
       const isFormCorrect = await this.v$.$validate();
       if (!isFormCorrect) return;
 
-      const variables = {
-        email: this.email,
-        username: this.username,
-        password: this.password,
-      };
-      const data = await graphqlClient.request(LOGIN_USER, variables);
-      const response = data.login.response;
-
-      if (response.success) {
-        const jwt_token = data.login.jwt_token;
+      const loginResponse = loginUser()
+      
+      if (loginResponse.response.success) {
+        const jwt_token = loginResponse.jwt_token;
         this.authStore.setToken(jwt_token);
         router.push("/");
       }

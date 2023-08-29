@@ -1,4 +1,5 @@
-import { gql } from 'graphql-request'
+import { gql } from "graphql-request";
+
 
 const ADD_USER = gql`
   mutation add_user($email: String!, $username: String!, $password: String!){
@@ -15,17 +16,4 @@ const ADD_USER = gql`
   }
 `;
 
-const LOGIN_USER = gql`
-  query login($email: String!, $password: String!){
-    login(email: $email,  password:$password) {
-        jwt_token
-        response{
-            success
-            message
-            error
-        }
-    }
-  }
-`;
-
-export { ADD_USER, LOGIN_USER };
+export { ADD_USER };

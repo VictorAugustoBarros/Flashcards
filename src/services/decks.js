@@ -1,38 +1,13 @@
-import { gql } from 'graphql-request'
+import { GET_USER_DECKS } from "@/graphql/querys/deckQuerys";
+import { graphqlClient } from "@/store/constants";
+import { useAuthStore } from "@/store/app";
 
-const ADD_DECK = gql`
-    mutation add_deck($name: String!, $description: String!) {
-        add_deck (name:$name, description:$description){
-            deck {
-                id
-            }
-            response{
-                success
-                message
-                error
-            }
-        }
-    }
-`;
+async function getUserDecks() {
+  const headers = {
+    authorization: useAuthStore().getToken,
+  };
 
-const GET_USER_DECKS = gql`
-    query {
-        get_user_deck{
-        decks {
-            id
-            name
-        }
-        response {
-            success
-            message
-            error
-        }
-        }
-  }
-`;
+  return await graphqlClient.request(GET_USER_DECKS, {}, headers);
+}
 
-const DELETE_DECK = gql`
-  
-`;
-
-export { ADD_DECK, DELETE_DECK, GET_USER_DECKS };
+export { getUserDecks };
