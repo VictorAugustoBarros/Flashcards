@@ -36,7 +36,7 @@ import { useVuelidate } from "@vuelidate/core";
 import { email, required } from "@vuelidate/validators";
 import { GraphQLClient } from "graphql-request";
 
-import { ADD_USER } from "@/services/users";
+import { addUser } from "@/services/users";
 
 import { graphqlUrl } from "@/store/constants";
 
@@ -66,15 +66,9 @@ export default {
       const isFormCorrect = await this.v$.$validate();
       if (!isFormCorrect) return;
 
-      const variables = {
-        email: this.email,
-        username: this.username,
-        password: this.password,
-      };
-      const data = await client.request(ADD_USER, variables);
-      const response = data.add_user.response;
+      const userData = addUser()
 
-      console.log(response);
+      console.log(userData);
     },
   },
 };

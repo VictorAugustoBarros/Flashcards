@@ -4,21 +4,21 @@
 
   <div>
     <v-text-field
-      v-model="v$.deck.deckName.$model"
-      :error-messages="v$.deck.deckName.$errors.map((e) => e.$message)"
+      v-model="v$.deck.name.$model"
+      :error-messages="v$.deck.name.$errors.map((e) => e.$message)"
       label="Deck Name"
       required
-      @input="v$.deck.deckName.$touch"
-      @blur="v$.deck.deckName.$touch"
+      @input="v$.deck.name.$touch"
+      @blur="v$.deck.name.$touch"
     ></v-text-field>
 
     <v-text-field
-      v-model="v$.deck.deckDescription.$model"
-      :error-messages="v$.deck.deckDescription.$errors.map((e) => e.$message)"
+      v-model="v$.deck.description.$model"
+      :error-messages="v$.deck.description.$errors.map((e) => e.$message)"
       label="Description"
       required
-      @input="v$.deck.deckDescription.$touch"
-      @blur="v$.deck.deckDescription.$touch"
+      @input="v$.deck.description.$touch"
+      @blur="v$.deck.description.$touch"
     ></v-text-field>
 
     <v-btn @click="createDeck()">Cadastrar Deck</v-btn>
@@ -27,26 +27,32 @@
   <Alert v-if="!alert"></Alert>
 
   <div>
-    <v-autocomplete v-model="selectedDeckId" :items="userDecks" item-title="name" item-value="id"> </v-autocomplete>
+    <v-autocomplete
+      v-model="selectedDeckId"
+      :items="userDecks"
+      item-title="name"
+      item-value="id"
+    >
+    </v-autocomplete>
 
     <v-text-field
-      v-model="v$.subdeck.subDeckName.$model"
-      :error-messages="v$.subdeck.subDeckName.$errors.map((e) => e.$message)"
+      v-model="v$.subdeck.name.$model"
+      :error-messages="v$.subdeck.name.$errors.map((e) => e.$message)"
       label="SubDeck Name"
       required
-      @input="v$.subdeck.subDeckName.$touch"
-      @blur="v$.subdeck.subDeckName.$touch"
+      @input="v$.subdeck.name.$touch"
+      @blur="v$.subdeck.name.$touch"
     ></v-text-field>
 
     <v-text-field
-      v-model="v$.subdeck.subDeckDescription.$model"
+      v-model="v$.subdeck.description.$model"
       :error-messages="
-        v$.subdeck.subDeckDescription.$errors.map((e) => e.$message)
+        v$.subdeck.description.$errors.map((e) => e.$message)
       "
       label="SubDeck Description"
       required
-      @input="v$.subdeck.subDeckDescription.$touch"
-      @blur="v$.subdeck.subDeckDescription.$touch"
+      @input="v$.subdeck.description.$touch"
+      @blur="v$.subdeck.description.$touch"
     ></v-text-field>
 
     <v-btn @click="createSubDeck()">Cadastrar SubDeck</v-btn>
@@ -57,9 +63,8 @@
 import { useAuthStore } from "@/store/app";
 import { useVuelidate } from "@vuelidate/core";
 import { required } from "@vuelidate/validators";
-import { ADD_DECK, GET_USER_DECKS } from "@/services/decks";
-import { ADD_SUBDECK } from "@/services/subdecks";
-import { graphqlClient } from "@/store/constants";
+import { getUserDecks, addDeck } from "@/services/decks";
+import { addSubDeck } from "@/services/subdecks";
 
 export default {
   name: "DecksPage",
@@ -72,26 +77,25 @@ export default {
       userDecks: [],
       selectedDeckId: null,
       deck: {
-        deck: null,
-        deckName: "Deck 1",
-        deckDescription: "Deck Description 1",
+        name: "",
+        description: "",
       },
 
       subdeck: {
-        subDeckName: "",
-        subDeckDescription: "",
+        name: "",
+        description: "",
       },
     };
   },
   validations() {
     return {
       deck: {
-        deckName: { required },
-        deckDescription: { required },
+        name: { required },
+        description: { required },
       },
       subdeck: {
-        subDeckName: { required },
-        subDeckDescription: { required },
+        name: { required },
+        description: { required },
       },
     };
   },
@@ -100,38 +104,22 @@ export default {
   },
   methods: {
     async loadDecks() {
-      const headers = {
-        authorization: this.authStore.getToken,
-      };
-
-      const data = await graphqlClient.request(GET_USER_DECKS, {}, headers);
-      const response = data.get_user_deck.response;
-      console.log(response)
-
-      if (response) {
-        this.userDecks = data.get_user_deck.decks;
+      const deckData = await getUserDecks();
+      console.log(deckData);
+      if (deckData.response.success) {
+        this.userDecks = deckData.decks;
         return;
       }
-      
+
       // TODO -> Adicionar tratamento de erro
     },
     async createDeck() {
-      console.log("Criando deck...");
       const isFormCorrect = await this.v$.deck.$validate();
       if (!isFormCorrect) return;
 
-      const headers = {
-        authorization: this.authStore.getToken,
-      };
-      const variables = {
-        name: this.deck.deckName,
-        description: this.deck.deckDescription,
-      };
+      const deckData = await addDeck(this.deck.name, this.deck.description);
 
-      const data = await graphqlClient.request(ADD_DECK, variables, headers);
-      const response = data.add_deck.response;
-      console.log(response);
-      if (response) {
+      if (deckData.response.success) {
         console.log("[Alerta] Deck criado com sucesso!");
       }
     },
@@ -140,19 +128,14 @@ export default {
       const isFormCorrect = await this.v$.subdeck.$validate();
       if (!isFormCorrect) return;
 
-      const headers = {
-        authorization: this.authStore.getToken,
-      };
-
-      const variables = {
-        deck_id: this.selectedDeckId,
-        name: this.subdeck.subDeckName,
-        description: this.subdeck.subDeckDescription,
-      };
-
-      const data = await graphqlClient.request(ADD_SUBDECK, variables, headers);
-      const response = data.add_subdeck.response;
-      console.log(response);
+      const subdeckData = await addSubDeck(
+        this.selectedDeckId,
+        this.subdeck.name,
+        this.subdeck.description
+      );
+      if (subdeckData.response.success) {
+        console.log("[Alerta] SubDeck criado com sucesso!");
+      }
     },
   },
 };

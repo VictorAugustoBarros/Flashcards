@@ -54,8 +54,9 @@ export default {
       const isFormCorrect = await this.v$.$validate();
       if (!isFormCorrect) return;
 
-      const loginResponse = loginUser()
-      
+      const loginResponse = await loginUser(this.email, this.password)
+      console.log(loginResponse);
+
       if (loginResponse.response.success) {
         const jwt_token = loginResponse.jwt_token;
         this.authStore.setToken(jwt_token);
