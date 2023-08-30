@@ -55,7 +55,6 @@ export default {
       if (!isFormCorrect) return;
 
       const loginResponse = await loginUser(this.email, this.password)
-      console.log(loginResponse);
 
       if (loginResponse.response.success) {
         const jwt_token = loginResponse.jwt_token;

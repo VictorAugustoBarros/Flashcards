@@ -67,8 +67,6 @@ export default {
       if (!isFormCorrect) return;
 
       const userData = addUser()
-
-      console.log(userData);
     },
   },
 };

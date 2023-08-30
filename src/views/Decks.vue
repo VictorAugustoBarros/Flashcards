@@ -105,7 +105,7 @@ export default {
   methods: {
     async loadDecks() {
       const deckData = await getUserDecks();
-      console.log(deckData);
+      
       if (deckData.response.success) {
         this.userDecks = deckData.decks;
         return;
@@ -124,7 +124,6 @@ export default {
       }
     },
     async createSubDeck() {
-      console.log("Criando subdeck...");
       const isFormCorrect = await this.v$.subdeck.$validate();
       if (!isFormCorrect) return;
 

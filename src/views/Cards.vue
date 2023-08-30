@@ -1,14 +1,19 @@
 <template>
-  <h1>Cards</h1>
   <!-- Criar um mini modal interno na pagina ao criar um novo Deck, abrindo as opções para novo cadastro -->
 
   <v-row>
-    <v-col cols="2"></v-col>
-    <v-col cols="4">
+    <v-col>
+      <CreateCardExpander :cardTypes="this.card.types" />
+    </v-col>
+  </v-row>
+
+  <v-row>
+    <v-spacer></v-spacer>
+    <v-col cols="3">
       <v-autocomplete
         label="Decks"
-        v-model="selectedSubDeckId"
-        :items="userSubDecks"
+        v-model="selectedDeckId"
+        :items="userDecks"
         item-title="name"
         item-value="id"
         variant="outlined"
@@ -16,7 +21,7 @@
       </v-autocomplete>
     </v-col>
 
-    <v-col cols="4">
+    <v-col cols="3">
       <v-autocomplete
         label="SubDecks"
         v-model="selectedSubDeckId"
@@ -24,52 +29,23 @@
         item-title="name"
         item-value="id"
         variant="outlined"
+        :error-messages="v$.selectedSubDeckId.$errors.map((e) => e.$message)"
       >
       </v-autocomplete>
     </v-col>
-    <v-col cols="2"></v-col>
+    <v-spacer></v-spacer>
   </v-row>
 
-  <v-expansion-panels>
-    <v-expansion-panel>
-      <v-expansion-panel-title expand-icon="mdi-plus" collapse-icon="mdi-minus">
-        Novo Card
-      </v-expansion-panel-title>
-      <v-expansion-panel-text>
-        <v-text-field hide-details placeholder="Subdeck"></v-text-field>
-        <v-text-field hide-details placeholder="Question"></v-text-field>
-        <v-text-field hide-details placeholder="Answer"></v-text-field>
-      </v-expansion-panel-text>
-    </v-expansion-panel>
-  </v-expansion-panels>
-
-  <v-autocomplete
-    v-model="selectedSubDeckId"
-    :items="userSubDecks"
-    item-title="name"
-    item-value="id"
-  >
-  </v-autocomplete>
-
-  <v-text-field
-    v-model="v$.card.cardQuestion.$model"
-    :error-messages="v$.card.cardQuestion.$errors.map((e) => e.$message)"
-    label="Card Question"
-    required
-    @input="v$.card.cardQuestion.$touch"
-    @blur="v$.card.cardQuestion.$touch"
-  ></v-text-field>
-
-  <v-text-field
-    v-model="v$.card.cardAnswer.$model"
-    :error-messages="v$.card.cardAnswer.$errors.map((e) => e.$message)"
-    label="Card Answer"
-    required
-    @input="v$.card.cardAnswer.$touch"
-    @blur="v$.card.cardAnswer.$touch"
-  ></v-text-field>
-
-  <v-btn @click="createCard()">Novo Card</v-btn>
+  <v-row>
+    <v-col>
+      <CardListItems />
+    </v-col>
+    <v-col>
+      <div style="height: 80vh">
+        <CardUser question="Teste" answer="Teste" />
+      </div>
+    </v-col>
+  </v-row>
 </template>
 
 <script>
@@ -77,81 +53,85 @@ import { useAuthStore } from "@/store/app";
 import { useVuelidate } from "@vuelidate/core";
 import { required } from "@vuelidate/validators";
 import { getUserDecks } from "@/services/decks";
+import { addCard } from "@/services/cards";
+import { getUserSubDecks } from "@/services/subdecks";
+
+import CardUser from "@/components/CardUser.vue";
+import CreateCardExpander from "@/components/CreateCardExpander.vue";
+import CardListItems from "@/components/CardListItems.vue";
 
 export default {
   name: "CardsPage",
+  components: {
+    CardUser,
+    CreateCardExpander,
+    CardListItems,
+  },
   setup() {
     return { v$: useVuelidate() };
   },
   data() {
     return {
+      authStore: useAuthStore(),
       userDecks: [],
       userSubDecks: [],
-      authStore: useAuthStore(),
+      selectedDeckId: null,
       selectedSubDeckId: null,
       card: {
-        cardQuestion: "",
-        cardAnswer: "",
-      }
+        types: ["Basic"],
+        question: "",
+        answer: "",
+      },
     };
   },
-  mounted() {
-    this.loadSubDecks();
+  async mounted() {
+    // Rever o tempo de busca na API
+    await this.loadData();
   },
   validations() {
     return {
       selectedSubDeckId: { required },
       card: {
-        cardQuestion: { required },
-        cardAnswer: { required },
+        question: { required },
+        answer: { required },
       },
     };
   },
   methods: {
     async loadData() {
-      const userDecksResponse = await getUserDecks()
-      console.log(userDecksResponse)
-      
-      // if (userDecksResponse.response.success) {
-      //   console.log(decksResponse)
-      //   this.userDecks = decksResponse.get_user_subdeck.response
-      //   return;
-      // }
+      const userDecksResponse = await getUserDecks();
+      // console.log(userDecksResponse);
+      if (userDecksResponse.response.success) {
+        this.userDecks = userDecksResponse.decks;
+      }
 
-    },
-    async loadSubDecks() {
-      const headers = {
-        authorization: this.authStore.getToken,
-      };
-
-      const data = await graphqlClient.request(GET_SUBDECKS, {}, headers);
-      const response = data.get_user_subdeck.response;
-
-      if (response) {
-        this.userSubDecks = data.get_user_subdeck.subdecks;
-        return;
+      const userSubDecksResponse = await getUserSubDecks();
+      // console.log(userSubDecksResponse);
+      if (userSubDecksResponse.response.success) {
+        this.userSubDecks = userSubDecksResponse.subdecks;
       }
     },
     async createCard() {
-      const isFormCorrect = await this.v$.card.$validate();
+      const isFormCorrect = await this.v$.$validate();
       if (!isFormCorrect) return;
 
-      const headers = {
-        authorization: this.authStore.getToken,
-      };
-      const variables = {
-        subdeck_id: this.selectedSubDeckId,
-        question: this.card.cardQuestion,
-        answer: this.card.cardAnswer,
-      };
-
-      const data = await graphqlClient.request(ADD_CARD, variables, headers);
-      const response = data.add_card.response;
-      console.log(response);
-      if (response) {
-        console.log("[Alerta] Deck criado com sucesso!");
+      const cardData = await addCard(
+        this.selectedSubDeckId,
+        this.card.question,
+        this.card.answer
+      );
+      if (cardData.response.success) {
+        console.log("[Alerta] Card criado com sucesso!");
       }
     },
   },
 };
 </script>
+
+<style>
+.center-elements {
+  justify-content: center;
+  align-items: center;
+  display: flex;
+}
+</style>
