@@ -1,5 +1,5 @@
 import { ADD_SUBDECK } from "@/graphql/mutations/subdeckMutations";
-import { GET_SUBDECKS } from "@/graphql/querys/subdeckQuerys"
+import { GET_SUBDECKS, GET_DECK_SUBDECKS } from "@/graphql/querys/subdeckQuerys"
 import { graphqlClient } from "@/store/constants";
 import { useAuthStore } from "@/store/app";
 
@@ -27,4 +27,17 @@ async function getUserSubDecks() {
   return data.get_user_subdeck;
 }
 
-export { addSubDeck, getUserSubDecks };
+async function getDeckSubDecks(deckId: Int16Array) {
+  const headers = {
+    authorization: useAuthStore().getToken,
+  };
+
+  const variables = {
+    deck_id: deckId
+  }
+
+  const data = await graphqlClient.request(GET_DECK_SUBDECKS, variables, headers);
+  return data.get_deck_subdecks;
+}
+
+export { addSubDeck, getUserSubDecks, getDeckSubDecks };

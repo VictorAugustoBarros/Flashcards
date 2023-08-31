@@ -38,45 +38,46 @@
 
   <v-row>
     <v-col>
-      <CardListItems />
+      <CardUserList v-if="this.userCards.length" :cards="this.userCards" />
+      <h1 v-else>Sem Cards</h1>
     </v-col>
     <v-col>
       <div style="height: 80vh">
-        <CardUser question="Teste" answer="Teste" />
+        <Card question="Teste" answer="Teste" />
       </div>
     </v-col>
   </v-row>
 </template>
 
 <script>
-import { useAuthStore } from "@/store/app";
 import { useVuelidate } from "@vuelidate/core";
 import { required } from "@vuelidate/validators";
 import { getUserDecks } from "@/services/decks";
-import { addCard } from "@/services/cards";
-import { getUserSubDecks } from "@/services/subdecks";
+import { addCard, getSubDeckCards } from "@/services/cards";
+import { getDeckSubDecks } from "@/services/subdecks";
 
-import CardUser from "@/components/CardUser.vue";
-import CreateCardExpander from "@/components/CreateCardExpander.vue";
-import CardListItems from "@/components/CardListItems.vue";
+import Card from "@/components/molecules/Card.vue";
+import CreateCardExpander from "@/components/molecules/CreateCardExpander.vue";
+import CardUserList from "@/components/molecules/CardUserList.vue";
 
 export default {
   name: "CardsPage",
   components: {
-    CardUser,
+    Card,
     CreateCardExpander,
-    CardListItems,
+    CardUserList,
   },
   setup() {
     return { v$: useVuelidate() };
   },
   data() {
     return {
-      authStore: useAuthStore(),
+      userCards: [],
       userDecks: [],
       userSubDecks: [],
       selectedDeckId: null,
       selectedSubDeckId: null,
+
       card: {
         types: ["Basic"],
         question: "",
@@ -84,8 +85,20 @@ export default {
       },
     };
   },
+  watch: {
+    selectedDeckId() {
+      this.userSubDecks = []
+      this.selectedSubDeckId = null
+      this.loadDeckSubDecks()
+    },
+    selectedSubDeckId() {
+      this.userCards = []
+      if (this.selectedSubDeckId){
+        this.loadSubDeckCards()
+      }
+    },
+  },
   async mounted() {
-    // Rever o tempo de busca na API
     await this.loadData();
   },
   validations() {
@@ -100,15 +113,20 @@ export default {
   methods: {
     async loadData() {
       const userDecksResponse = await getUserDecks();
-      // console.log(userDecksResponse);
       if (userDecksResponse.response.success) {
-        this.userDecks = userDecksResponse.decks;
+        this.userDecks = userDecksResponse.decks ? userDecksResponse.decks : []
       }
-
-      const userSubDecksResponse = await getUserSubDecks();
-      // console.log(userSubDecksResponse);
-      if (userSubDecksResponse.response.success) {
-        this.userSubDecks = userSubDecksResponse.subdecks;
+    },
+    async loadDeckSubDecks() {
+      const deckSubDecksResponse = await getDeckSubDecks(this.selectedDeckId);
+      if (deckSubDecksResponse.response.success) {   
+        this.userSubDecks = deckSubDecksResponse.subdecks ? deckSubDecksResponse.subdecks : []
+      }
+    },
+    async loadSubDeckCards() {
+      const userSubDecksCardsResponse = await getSubDeckCards(this.selectedSubDeckId);
+      if (userSubDecksCardsResponse.response.success) {
+        this.userCards = userSubDecksCardsResponse.cards ? userSubDecksCardsResponse.cards : []
       }
     },
     async createCard() {

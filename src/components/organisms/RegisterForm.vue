@@ -34,13 +34,7 @@
 <script>
 import { useVuelidate } from "@vuelidate/core";
 import { email, required } from "@vuelidate/validators";
-import { GraphQLClient } from "graphql-request";
-
 import { addUser } from "@/services/users";
-
-import { graphqlUrl } from "@/store/constants";
-
-const client = new GraphQLClient(graphqlUrl);
 
 export default {
   name: "RegisterForm",
@@ -66,7 +60,11 @@ export default {
       const isFormCorrect = await this.v$.$validate();
       if (!isFormCorrect) return;
 
-      const userData = addUser()
+      const userData = await addUser(this.email, this.username, this.password);
+      console.log(userData);
+      if (userData.response.success) {
+        console.log("[User] Criado com sucesso!");
+      }
     },
   },
 };

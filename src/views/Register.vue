@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import RegisterForm from "@/components/RegisterForm.vue";
+import RegisterForm from "@/components/organisms/RegisterForm.vue";
 
 export default {
   name: "RegisterPage",

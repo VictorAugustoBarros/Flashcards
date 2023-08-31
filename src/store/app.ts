@@ -12,7 +12,7 @@ export const useAuthStore = defineStore("app", {
     hasToken: (state) => (state.token ? true : false),
   },
   actions: {
-    setToken(newToken) {
+    setToken(newToken: string) {
       this.token = newToken;
     },
     logout() {

@@ -12,7 +12,7 @@
 </template>
 
 <script>
-import UserMenuList from "@/components/UserMenuList.vue";
+import UserMenuList from "@/components/organisms/UserMenuList.vue";
 
 export default {
   name: "AppBar",

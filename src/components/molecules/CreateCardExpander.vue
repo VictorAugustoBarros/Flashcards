@@ -31,9 +31,7 @@
             ></v-text-field>
           </v-col>
           <v-col cols="2" class="center-elements">
-            <v-btn prepend-icon="$vuetify" variant="outlined" color="green">
-              Criar Card
-            </v-btn>
+            <Button text="Criar Card" color="green" icon="$vuetify"></Button>
           </v-col>
         </v-row>
       </v-expansion-panel-text>
@@ -42,12 +40,17 @@
 </template>
 
 <script>
+import  Button from "@/components/atoms/Button.vue";
+
 export default {
   name: "CreateCardExpander",
+  components: {
+    Button
+  },
   props: {
     cardTypes: {
-      type: Array
-    }
-  }
+      type: Array,
+    },
+  },
 };
 </script>
