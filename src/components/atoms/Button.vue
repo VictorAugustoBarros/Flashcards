@@ -1,5 +1,5 @@
 <template>
-  <v-btn :prepend-icon="icon" variant="outlined" :color="color">
+  <v-btn :prepend-icon="icon" variant="outlined" :color="color" :size="size">
     {{ text }}
   </v-btn>
 </template>
@@ -8,6 +8,7 @@
 export default {
   name: "Button",
   props: {
+    size: String,
     text: String,
     color: String,
     icon: String,

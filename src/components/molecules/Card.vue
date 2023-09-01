@@ -3,7 +3,7 @@
     <v-card-item class="centerElements" style="display: unset">
       <v-text-field
         placeholder="Question"
-        v-model="localQuestion"
+        v-model="this.question"
         variant="tonal"
         style="width: 100%"
       >
@@ -11,7 +11,7 @@
       <v-text-field
         placeholder="Answer"
         variant="tonal"
-        v-model="localAnswer"
+        v-model="this.answer"
         style="width: 100%"
       >
       </v-text-field>
@@ -32,14 +32,9 @@ export default {
     Button,
   },
   props: {
+    id: Int16Array,
     question: String,
     answer: String,
-  },
-  data() {
-    return {
-      localQuestion: this.question,
-      localAnswer: this.answer,
-    };
   },
   methods: {
     editCard() {

@@ -8,6 +8,7 @@
         :title="item.title"
         :subtitle="item.subtitle"
         :color="item.props.color"
+        @click="$emit('loadCard', item.id)"
       >
       </v-list-item>
     </v-list>
@@ -23,6 +24,9 @@ export default {
   data: () => ({
     items: [],
   }),
+  unmounted(){
+    this.$emit("removeCard")
+  },
   watch: {
     cards: {
       handler(newCards) {
@@ -38,6 +42,6 @@ export default {
       },
       immediate: true,
     },
-  }
+  },
 };
 </script>
