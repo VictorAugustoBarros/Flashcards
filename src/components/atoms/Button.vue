@@ -14,6 +14,7 @@
 export default {
   name: "Button",
   props: {
+    text: String,
     variant: {
       type: String,
       default: "outlined"
@@ -21,8 +22,7 @@ export default {
     size: {
       type: String,
       default: "large",
-    },
-    text: String,
+    },    
     color: {
       type: String,
       default: "black",
@@ -30,11 +30,7 @@ export default {
     backgroundColor: {
       type: String,
       default: "white",
-    },
-    icon: {
-      type: String,
-      default: null,
-    },
+    }
   },
 };
 </script>
