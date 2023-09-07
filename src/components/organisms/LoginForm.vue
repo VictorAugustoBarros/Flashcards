@@ -18,7 +18,9 @@
         ></v-text-field>
       </v-responsive>
   
-      <v-btn class="me-4" @click="login()"> login </v-btn>
+      <div class="center-Elements-Flex">
+        <v-btn class="me-4" @click="login()"> login </v-btn>
+      </div>
     </form>
   </template>
   
@@ -38,8 +40,8 @@
     data() {
       return {
         authStore: useAuthStore(),
-        email: "victor@gmail.com",
-        password: "admin",
+        email: "teste@teste.com",
+        password: "teste123",
       };
     },
     validations() {

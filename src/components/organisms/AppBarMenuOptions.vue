@@ -44,7 +44,7 @@
 import { useAuthStore } from "@/store/app";
 
 export default {
-  name: "UserMenuList",
+  name: "AppBarMenuOptions",
   data: () => ({
     fav: true,
     menu: false,

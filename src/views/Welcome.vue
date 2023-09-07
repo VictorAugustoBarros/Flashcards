@@ -2,8 +2,7 @@
   <v-app>
     <html>
       <body>
-        <AlertBox />
-        <AppBar />
+        <AppBarWelcome />
 
         <default-view />
       </body>
@@ -12,7 +11,7 @@
 </template>
 
 <script setup>
-import AppBar from "@/layouts/default/AppBar.vue";
-import AlertBox from "@/components/atoms/AlertBox.vue";
+import AppBarWelcome from "@/layouts/default/AppBarWelcome.vue";
+
 import DefaultView from "@/layouts/default/View.vue";
 </script>

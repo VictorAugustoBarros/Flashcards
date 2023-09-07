@@ -13,8 +13,14 @@ import { createApp } from 'vue'
 // Plugins
 import { registerPlugins } from '@/plugins'
 
+import mitt from 'mitt';
+
 const app = createApp(App)
 
 registerPlugins(app)
+
+const emitter = mitt();
+
+app.config.globalProperties.emitter = emitter;
 
 app.mount('#app')

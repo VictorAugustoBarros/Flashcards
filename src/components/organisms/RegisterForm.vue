@@ -27,7 +27,9 @@
       ></v-text-field>
     </v-responsive>
 
-    <v-btn class="me-4" @click="submitForm()"> submit </v-btn>
+    <div class="center-Elements-Flex">
+      <v-btn class="me-4" @click="submitForm()"> submit </v-btn>
+    </div>
   </form>
 </template>
 

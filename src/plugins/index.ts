@@ -13,7 +13,6 @@ import router from "../router";
 import piniaPersist from 'pinia-plugin-persist'
 pinia.use(piniaPersist)
 
-
 export function registerPlugins(app) {
   loadFonts();
   app.use(vuetify).use(router).use(pinia);

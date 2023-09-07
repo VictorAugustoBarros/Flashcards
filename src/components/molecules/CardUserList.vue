@@ -1,5 +1,5 @@
 <template>
-  <v-card class="mx-auto">
+  <v-card style="max-height: 500px; overflow: auto">
     <v-list>
       <v-list-item
         v-for="(item, i) in items"
@@ -24,8 +24,8 @@ export default {
   data: () => ({
     items: [],
   }),
-  unmounted(){
-    this.$emit("removeCard")
+  unmounted() {
+    this.$emit("removeCard");
   },
   watch: {
     cards: {

@@ -3,6 +3,42 @@ import { createRouter, createWebHistory } from "vue-router";
 
 const routes = [
   {
+    path: "/welcome",
+    component: () => import("@/views/Welcome.vue"),
+    children: [
+      {
+        path: "/about",
+        name: "Sobre",
+        component: () => import("@/views/About.vue"),
+      },
+      {
+        path: "/how-it-works",
+        name: "HowItWorks",
+        component: () => import("@/views/HowItWorks.vue"),
+      },      
+      {
+        path: "/login",
+        children: [
+          {
+            path: "",
+            name: "Login",
+            component: () => import("@/views/Login.vue"),
+          },
+        ],
+      },
+      {
+        path: "/register",
+        children: [
+          {
+            path: "",
+            name: "Register",
+            component: () => import("@/views/Register.vue"),
+          },
+        ],
+      },
+    ],
+  },
+  {
     path: "/",
     component: () => import("@/layouts/default/Default.vue"),
     children: [
@@ -24,24 +60,8 @@ const routes = [
     ],
   },
   {
-    path: "/login",
-    children: [
-      {
-        path: "",
-        name: "Login",
-        component: () => import("@/views/Login.vue"),
-      },
-    ],
-  },
-  {
-    path: "/register",
-    children: [
-      {
-        path: "",
-        name: "Register",
-        component: () => import("@/views/Register.vue"),
-      },
-    ],
+    path: "/:catchAll(.*)",
+    component: () => import("@/views/404.vue"),
   },
 ];
 
@@ -58,19 +78,23 @@ router.beforeEach((to, from, next) => {
   const authStore = useAuthStore();
   const isAuthenticated = authStore.hasToken;
 
-  if (to.path !== "/login" && to.path !== "/register" && !isAuthenticated) {
-    next("/login");
-  } else if (to.path === "/login" && isAuthenticated) {
-    next("/");
-  } else if (to.path === "/login" && !isAuthenticated) {
-    next();
-  } else if (to.path !== "/login" && isAuthenticated) {
-    const validToken = authStore.validateToken();
-    if (!validToken) {
-      next("/login");
-      return;
+  // console.log(from.path + " -> " + to.path + " -> " + isAuthenticated);
+
+  if (authStore.getFirstAccess) {
+    authStore.setFirstAccess();
+    next("/how-it-works");
+  } else if (to.path === "/") {
+    if (isAuthenticated) {
+      next();
+    } else {
+      next("/how-it-works");
     }
-    next();
+  } else if (to.path === "/login" || to.path === "/register") {
+    if (isAuthenticated) {
+      next("/");
+    } else {
+      next();
+    }
   } else {
     next();
   }

@@ -12,7 +12,7 @@
   </v-row>
 
   <v-row>
-    <v-spacer></v-spacer>
+    <v-col cols="2" />
     <v-col cols="4">
       <CardUserList
         v-if="userCards.length"
@@ -52,12 +52,23 @@ export default {
   },
   data() {
     return {
+      deckId: null,
+      subDeckId: null,
       userCards: [],
       card: null,
     };
   },
+  created() {
+    this.emitter.on("reloadCardUserList", (subDeckId) => {
+      if (this.subDeckId === subDeckId) {
+        this.loadSubDeckCards(subDeckId)
+      }
+    });
+  },
   methods: {
     async loadSubDeckCards(subDeckId) {
+      this.subDeckId = subDeckId;
+
       if (subDeckId) {
         const userSubDecksCardsResponse = await getSubDeckCards(subDeckId);
         if (userSubDecksCardsResponse.response.success) {
@@ -67,9 +78,10 @@ export default {
         }
       }
     },
-    changeDeck(){
-      this.userCards = []
-      this.card = null
+    changeDeck(deckId) {
+      this.deckId = deckId;
+      this.userCards = [];
+      this.card = null;
     },
     loadCard(cardId) {
       for (const card of this.userCards) {

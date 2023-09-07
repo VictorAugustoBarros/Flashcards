@@ -1,19 +1,14 @@
 <template>
   <v-card max-width="344" variant="outlined" rounded>
-    <v-card-item class="centerElements" style="display: unset">
+    <v-card-item class="center-Elements-Flex" style="display: unset">
       <v-text-field
+        style="text-align: center"
         placeholder="Question"
         v-model="this.question"
         variant="tonal"
-        style="width: 100%"
       >
       </v-text-field>
-      <v-text-field
-        placeholder="Answer"
-        variant="tonal"
-        v-model="this.answer"
-        style="width: 100%"
-      >
+      <v-text-field placeholder="Answer" variant="tonal" v-model="this.answer">
       </v-text-field>
     </v-card-item>
     <v-card-actions class="centerElements">
@@ -48,10 +43,3 @@ export default {
   },
 };
 </script>
-
-<style>
-.centerElements {
-  justify-content: center;
-  text-align: center;
-}
-</style>

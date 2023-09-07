@@ -6,18 +6,24 @@ import jwtDecode from "jwt-decode";
 export const useAuthStore = defineStore("app", {
   state: () => ({
     token: "",
+    firstAcess: true
   }),
   getters: {
+    getFirstAccess: (state) => state.firstAcess,
     getToken: (state) => state.token,
     hasToken: (state) => (state.token ? true : false),
   },
   actions: {
+    setFirstAccess() {
+      this.firstAcess = false;
+    },
     setToken(newToken: string) {
       this.token = newToken;
     },
     logout() {
+      this.token = "";
       sessionStorage.clear();
-      router.push("Login");
+      router.push("/how-it-works");
     },
     validateToken() {
       try {
