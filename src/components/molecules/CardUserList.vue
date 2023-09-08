@@ -1,6 +1,6 @@
 <template>
   <v-card style="max-height: 500px; overflow: auto">
-    <v-list>
+    <v-list lines="two">
       <v-list-item
         v-for="(item, i) in items"
         :key="i"

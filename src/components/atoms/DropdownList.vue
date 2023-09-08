@@ -1,15 +1,6 @@
 <template>
-  <v-autocomplete
-    filled
-    dense
-    hide-details
-    :label="label"
-    :items="items"
-    :item-title="title"
-    :item-value="value"
-    variant="outlined"
-    :disable="disable"
-  >
+  <v-autocomplete filled dense hide-details :label="label" :items="items" :item-title="title" :item-value="value"
+    variant="outlined" :disabled="disableComponent">
   </v-autocomplete>
 </template>
 
@@ -21,7 +12,7 @@ export default {
     items: Array,
     title: String,
     value: String,
-    disable: {
+    disableComponent: {
       type: Boolean,
       default: false,
     },

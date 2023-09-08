@@ -2,11 +2,7 @@
   <v-row>
     <v-col cols="4"></v-col>
     <v-col cols="4">
-      <DeckSubdeckDropdownList
-        @load-sub-deck-cards="loadSubDeckCards"
-        @change-deck="changeDeck"
-        cols="6"
-      />
+      <DeckSubdeckDropdownList @load-sub-deck-cards="loadSubDeckCards" @change-deck="changeDeck" cols="6" />
     </v-col>
     <v-col cols="4"></v-col>
   </v-row>
@@ -14,25 +10,17 @@
   <v-row>
     <v-col cols="2" />
     <v-col cols="4">
-      <CardUserList
-        v-if="userCards.length"
-        :cards="userCards"
-        @load-card="loadCard"
-        @remove-card="removeCard"
-      />
-      <h1 v-else>Sem Cards</h1>
+      <div class="center-Elements" style="height: 100%;">
+        <CardUserList v-if="userCards.length" :cards="userCards" @load-card="loadCard" @remove-card="removeCard" />
+        <h1 v-else>Sem Cards</h1>
+      </div>
+
     </v-col>
-    <v-col cols="4">
-      <div style="height: 80vh">
-        <Card
-          v-if="this.card"
-          :id="this.card.id"
-          :question="this.card.question"
-          :answer="this.card.answer"
-        />
+    <v-col cols="6">
+      <div class="center-Elements-Flex" style="height: 80vh;">
+        <Card v-if="this.card" :id="this.card.id" :question="this.card.question" :answer="this.card.answer" />
       </div>
     </v-col>
-    <v-spacer></v-spacer>
   </v-row>
 </template>
 

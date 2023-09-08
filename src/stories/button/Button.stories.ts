@@ -1,23 +1,46 @@
 import Button from "@/components/atoms/Button.vue";
 
-// More on how to set up stories at: https://storybook.js.org/docs/vue/writing-stories/introduction
 export default {
-  title: "Example/Button",
+  title: "Button",
   component: Button,
-  tags: ["autodocs"],
   argTypes: {
-    variant: "",
-    size: "",
-    text: "",
-    color: "",
-    backgroundColor: "",
-    icon: "",
+    size: {
+      description: 'Tamanho do botão',
+      options: ["x-small", "small", "default", "large", "x-large"],
+      control: { type: 'radio' },
+    },
+    variant: {
+      description: 'Estilo do botão',
+      options: ['text', 'flat', 'elevated', 'tonal', 'outlined', 'plain'],
+      control: { type: 'radio' },
+    },
+    color: {
+      control: { type: 'color' },
+    },
+    backgroundColor: {
+      control: { type: 'color' },
+    }
   },
 };
 
-// More on writing stories with args: https://storybook.js.org/docs/vue/writing-stories/args
-export const Default = {
-  args: {
-    text: "Teste",
+const Template = (args) => ({
+  components: { Button },
+  setup() {
+    return { args };
   },
+  template: '<Button v-bind="args"/>',
+});
+
+export const ButtonExample = Template.bind({});
+ButtonExample.args = {
+  text: "Texto de exemplo",
+  color: "blue",
+};
+
+export const ButtonDelete = Template.bind({});
+ButtonDelete.args = {
+  color: "red",
+  variant: "text",
+  icon: "mdi-delete-outline",
+  size: "x-large"
 };
