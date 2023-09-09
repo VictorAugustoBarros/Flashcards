@@ -5,7 +5,7 @@
                 Realmente quer deletar?
             </v-card-text>
             <v-card-actions>
-                <Button color="green" text="Cancelar" variant="text" @click="dialog = false"></Button>
+                <Button color="green" text="Cancelar" variant="text" @click="this.$emit('closeModal')"></Button>
 
                 <Button class="center-Elements-Flex" color="red" variant="text" @click="deleteItem"
                     :icon="hovered ? 'mdi-delete-empty' : 'mdi-delete'" size="x-large" @mouseover="hovered = true"
@@ -32,7 +32,7 @@ export default {
     },
     methods: {
         deleteItem() {
-            console.log("Emitir evento pro compoente pai")
+            this.$emit("deleteItem")
         }
     }
 }

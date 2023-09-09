@@ -7,18 +7,17 @@
     <v-col cols="4"></v-col>
   </v-row>
 
-  <v-row>
-    <v-col cols="2" />
+  <v-row v-if="userCards.length">
+    <v-col cols="1" />
     <v-col cols="4">
-      <div class="center-Elements" style="height: 100%;">
-        <CardUserList v-if="userCards.length" :cards="userCards" @load-card="loadCard" @remove-card="removeCard" />
-        <h1 v-else>Sem Cards</h1>
+      <div class="center-Elements-Flex" style="height: 100%;">
+        <CardUserList :activeId="this.card.id"  :cards="userCards" @load-card="loadCard" @remove-card="removeCard" />        
       </div>
-
     </v-col>
+    <v-col cols="1" />
     <v-col cols="6">
       <div class="center-Elements-Flex" style="height: 80vh;">
-        <Card v-if="this.card" :id="this.card.id" :question="this.card.question" :answer="this.card.answer" />
+        <Card @card-removed="this.card.id = null" v-if="this.card.id" :cardId="this.card.id" :subdeckId="subDeckId" :question="this.card.question" :answer="this.card.answer" />
       </div>
     </v-col>
   </v-row>
@@ -28,7 +27,6 @@
 import Card from "@/components/molecules/Card.vue";
 import CardUserList from "@/components/molecules/CardUserList.vue";
 import DeckSubdeckDropdownList from "@/components/molecules/DeckSubdeckDropdownList.vue";
-
 import { getSubDeckCards } from "@/services/cards";
 
 export default {
@@ -43,7 +41,9 @@ export default {
       deckId: null,
       subDeckId: null,
       userCards: [],
-      card: null,
+      card: {
+        id: null
+      },
     };
   },
   created() {
@@ -69,7 +69,7 @@ export default {
     changeDeck(deckId) {
       this.deckId = deckId;
       this.userCards = [];
-      this.card = null;
+      this.card.id = null;
     },
     loadCard(cardId) {
       for (const card of this.userCards) {
@@ -80,7 +80,7 @@ export default {
       }
     },
     removeCard() {
-      this.card = null;
+      this.card.id = null;
     },
   },
 };
