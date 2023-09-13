@@ -1,13 +1,9 @@
 <template>
   <v-app>
-    <html>
-      <body>
-        <AlertBox />
-        <AppBar />
+      <AlertBox />
+      <AppBar />
 
-        <default-view />
-      </body>
-    </html>
+      <default-view/>
   </v-app>
 </template>
 

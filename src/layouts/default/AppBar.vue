@@ -4,7 +4,6 @@
       <router-link to="/" class="title">Dashboard</router-link>
       <router-link to="/decks" class="title">Decks</router-link>
       <router-link to="/cards" class="title">Cards</router-link>
-      <router-link to="/" class="title">Review</router-link>
     </div>
     <template v-slot:append>
       <AppBarMenuOptions />

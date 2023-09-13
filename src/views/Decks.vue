@@ -1,62 +1,13 @@
 <template>
-  <h1>Decks</h1>
-  <!-- Criar um mini modal interno na pagina ao criar um novo Deck, abrindo as opções para novo cadastro -->
+  <v-row>
+    <v-col>
+      <CreateDeckExpander />
+    </v-col>
+  </v-row>
 
-  <div>
-    <v-text-field
-      v-model="v$.deck.name.$model"
-      :error-messages="v$.deck.name.$errors.map((e) => e.$message)"
-      label="Deck Name"
-      required
-      @input="v$.deck.name.$touch"
-      @blur="v$.deck.name.$touch"
-    ></v-text-field>
-
-    <v-text-field
-      v-model="v$.deck.description.$model"
-      :error-messages="v$.deck.description.$errors.map((e) => e.$message)"
-      label="Description"
-      required
-      @input="v$.deck.description.$touch"
-      @blur="v$.deck.description.$touch"
-    ></v-text-field>
-
-    <v-btn @click="createDeck()">Cadastrar Deck</v-btn>
-  </div>
-
-  <Alert v-if="!alert"></Alert>
-
-  <div>
-    <v-autocomplete
-      v-model="selectedDeckId"
-      :items="userDecks"
-      item-title="name"
-      item-value="id"
-    >
-    </v-autocomplete>
-
-    <v-text-field
-      v-model="v$.subdeck.name.$model"
-      :error-messages="v$.subdeck.name.$errors.map((e) => e.$message)"
-      label="SubDeck Name"
-      required
-      @input="v$.subdeck.name.$touch"
-      @blur="v$.subdeck.name.$touch"
-    ></v-text-field>
-
-    <v-text-field
-      v-model="v$.subdeck.description.$model"
-      :error-messages="
-        v$.subdeck.description.$errors.map((e) => e.$message)
-      "
-      label="SubDeck Description"
-      required
-      @input="v$.subdeck.description.$touch"
-      @blur="v$.subdeck.description.$touch"
-    ></v-text-field>
-
-    <v-btn @click="createSubDeck()">Cadastrar SubDeck</v-btn>
-  </div>
+  <v-row>
+    <Deck />
+  </v-row>
 </template>
 
 <script>
@@ -66,13 +17,22 @@ import { required } from "@vuelidate/validators";
 import { getUserDecks, addDeck } from "@/services/decks";
 import { addSubDeck } from "@/services/subdecks";
 
+import CreateDeckExpander from "@/components/molecules/CreateDeckExpander.vue"
+import CreateSubDeckExpander from "@/components/molecules/CreateSubDeckExpander.vue"
+import Deck from "@/components/molecules/Deck.vue"
+
 export default {
   name: "DecksPage",
+  components: {
+    CreateDeckExpander,
+    CreateSubDeckExpander,
+    Deck,
+  },
   setup() {
     return { v$: useVuelidate() };
   },
   data() {
-    return {
+    return {      
       authStore: useAuthStore(),
       userDecks: [],
       selectedDeckId: null,
@@ -105,7 +65,7 @@ export default {
   methods: {
     async loadDecks() {
       const deckData = await getUserDecks();
-      
+
       if (deckData.response.success) {
         this.userDecks = deckData.decks;
         return;

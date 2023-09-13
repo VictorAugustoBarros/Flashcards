@@ -3,7 +3,7 @@
     v-if="visible"
     :type="type"
     :title="title"
-    style="position: absolute; overflow: auto"
+    style="position: absolute;"
     class="fixed-alert"
     max-width="300px"
     max-height="100px"
