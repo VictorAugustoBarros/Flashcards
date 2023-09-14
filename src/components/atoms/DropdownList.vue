@@ -1,5 +1,5 @@
 <template>
-  <v-autocomplete filled dense hide-details :label="label" :items="items" :item-title="title" :item-value="value"
+  <v-autocomplete filled dense :label="label" :items="items" :item-title="title" :item-value="value"
     variant="outlined" :disabled="disableComponent">
   </v-autocomplete>
 </template>

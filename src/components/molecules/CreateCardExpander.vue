@@ -2,40 +2,41 @@
   <v-row>
     <v-col>
       <v-expansion-panels>
-      <v-expansion-panel rounded="True">
-        <v-expansion-panel-title expand-icon="mdi-plus" collapse-icon="mdi-minus">
-          Novo Card
-        </v-expansion-panel-title>
+        <v-expansion-panel rounded="True">
+          <v-expansion-panel-title expand-icon="mdi-plus" collapse-icon="mdi-minus">
+            Novo Card
+          </v-expansion-panel-title>
 
-        <v-expansion-panel-text>
-          <div>
-            <v-row>
-              <v-col cols="2" class="center-Elements-Flex">
-                <DropdownList label="Tipo" :items="cardTypes" v-model="cardTypes[0]" disabled="true" />
-              </v-col>
+          <v-expansion-panel-text>
+            <div>
+              <v-row>
+                <v-col cols="2" class="center-Elements-Flex">
+                  <DropdownList class="card-padding" label="Tipo" :items="cardTypes" v-model="cardTypes[0]"
+                    disabled="true" />
+                </v-col>
 
-              <v-col cols="4" class="center-Elements-Flex">
-                <DeckSubdeckDropdownList @changeSubDeck="changeSubDeck" cols="6" />
-              </v-col>
-              <v-col cols="2" class="center-Elements-Flex">
-                <v-text-field hide-details placeholder="Question" variant="outlined" v-model="card.question"
-                  :error-messages="v$.card.question.$errors.map((e) => e.$message)
-                    "></v-text-field>
-              </v-col>
-              <v-col cols="2" class="center-Elements-Flex">
-                <v-text-field hide-details placeholder="Answer" variant="outlined" v-model="card.answer"
-                  :error-messages="v$.card.answer.$errors.map((e) => e.$message)"></v-text-field>
-              </v-col>
-              <v-col cols="2" class="center-Elements-Flex">
-                <Button text="Criar Card" color="green" size="large" @click="addCard()"></Button>
-              </v-col>
-            </v-row>
-          </div>
-        </v-expansion-panel-text>
-      </v-expansion-panel>
-    </v-expansion-panels>
+                <v-col cols="4" class="center-Elements-Flex">
+                  <DeckSubdeckDropdownList class="card-padding" @changeSubDeck="changeSubDeck" cols="6" />
+                </v-col>
+                <v-col cols="2" class="center-Elements-Flex">
+                  <v-text-field counter maxlength="30" class="card-padding" placeholder="Question" variant="outlined"
+                    v-model="card.question"
+                    :error-messages="v$.card.question.$errors.map((e) => e.$message)"></v-text-field>
+                </v-col>
+                <v-col cols="2" class="center-Elements-Flex">
+                  <v-text-field counter maxlength="30" class="card-padding" placeholder="Answer" variant="outlined"
+                    v-model="card.answer" :error-messages="v$.card.answer.$errors.map((e) => e.$message)"></v-text-field>
+                </v-col>
+                <v-col cols="2" class="center-Elements-Flex">
+                  <Button text="Criar Card" color="green" size="large" @click="addCard()"></Button>
+                </v-col>
+              </v-row>
+            </div>
+          </v-expansion-panel-text>
+        </v-expansion-panel>
+      </v-expansion-panels>
     </v-col>
-    
+
   </v-row>
 </template>
 
@@ -45,7 +46,7 @@ import DropdownList from "@/components/atoms/DropdownList.vue";
 import DeckSubdeckDropdownList from "@/components/molecules/DeckSubdeckDropdownList.vue";
 import { addCard } from "@/services/cards";
 import { useVuelidate } from "@vuelidate/core";
-import { required } from "@vuelidate/validators";
+import { required, helpers } from "@vuelidate/validators";
 
 export default {
   name: "CreateCardExpander",
@@ -59,18 +60,17 @@ export default {
   },
   validations() {
     return {
-      subdeckId: { required },
       card: {
-        question: { required },
-        answer: { required },
+        question: { required: helpers.withMessage('Valor Obrigatório', required) },
+        answer: { required: helpers.withMessage('Valor Obrigatório', required) },
       },
     };
   },
   data() {
     return {
-      deckId: null,
-      subdeckId: null,
       card: {
+        deckId: null,
+        subdeckId: null,
         question: null,
         answer: null,
       },
@@ -84,7 +84,6 @@ export default {
     userSubDecks: Array,
   },
   methods: {
-    // TODO -> Adicionar validações (vuelidate)
     changeSubDeck(subdeckId) {
       this.subdeckId = subdeckId;
     },

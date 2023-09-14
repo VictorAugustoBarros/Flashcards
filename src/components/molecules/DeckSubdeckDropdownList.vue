@@ -7,6 +7,7 @@
         title="name"
         value="id"
         v-model="selectedDeckId"
+        :error-messages="v$.selectedDeckId.$errors.map((e) => e.$message)"
       />
     </v-col>
 
@@ -17,6 +18,7 @@
         title="name"
         value="id"
         v-model="selectedSubDeckId"
+        :error-messages="v$.selectedSubDeckId.$errors.map((e) => e.$message)"
       />
     </v-col>
   </v-row>
@@ -26,6 +28,8 @@
 import DropdownList from "@/components/atoms/DropdownList.vue";
 import { getUserDecks } from "@/services/decks";
 import { getDeckSubDecks } from "@/services/subdecks";
+import { useVuelidate } from "@vuelidate/core";
+import { required, helpers } from "@vuelidate/validators";
 
 export default {
   name: "DeckSubdeckDropdownList",
@@ -35,6 +39,15 @@ export default {
   props: {
     cols: String,
   },
+  setup() {
+    return { v$: useVuelidate() };
+  },
+  validations() {
+    return {
+      selectedDeckId: { required: helpers.withMessage('Valor Obrigatório', required) },
+      selectedSubDeckId: { required: helpers.withMessage('Valor Obrigatório', required) },
+    };
+  },
   data() {
     return {
       userDecks: [],
@@ -43,7 +56,6 @@ export default {
       selectedSubDeckId: null,
     };
   },
- 
   async mounted() {
     const userDecksResponse = await getUserDecks();
     if (userDecksResponse.response.success) {
@@ -51,13 +63,16 @@ export default {
     }
   },
   watch: {
-    selectedDeckId() {
+    async selectedDeckId() {
+      const isFormCorrect = await this.v$.selectedDeckId.$validate();
+      if (!isFormCorrect) return;
+
       this.userSubDecks = [];
       this.selectedSubDeckId = null;
       this.loadDeckSubDecks();
       this.$emit("changeDeck", this.selectedDeckId);
     },
-    selectedSubDeckId() {
+    async selectedSubDeckId() {
       this.$emit("changeSubDeck", this.selectedSubDeckId);
       this.$emit("loadSubDeckCards", this.selectedSubDeckId);
     },

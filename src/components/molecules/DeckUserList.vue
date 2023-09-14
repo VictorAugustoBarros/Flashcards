@@ -1,29 +1,25 @@
 <template>
   <div>
-    <v-card style="overflow: auto;width: 800px;height: 600px;" rounded="xl">
+    <v-card style="overflow: auto;width: 900px;height: 800px;" rounded="xl">
       <v-text-field class="fixed-search" style="text-align: center;" v-model="search" label="Pesquisar" outlined
         @click:clear="clearSearch" @input="filterItems"></v-text-field>
 
       <v-list class="item-list" style="max-height: 500px; overflow-y: auto;">
-
-        <v-card v-for="item in items" :key="item.id" width="100" height="100">
-          <template v-slot:title>
-            {{ item.name }}
-          </template>
-
-          <template v-slot:subtitle>
-            {{ item.description }}
-          </template>
-        </v-card>
-
+        <Deck v-for="deck in decks" :name="deck.name" :description="deck.description"/>
       </v-list>
     </v-card>
   </div>
 </template>
 
 <script>
+
+import Deck from "@/components/molecules/Deck.vue"
+
 export default {
-  name: "CardUserList",
+  name: "DeckUserList",
+  components: {
+    Deck
+  },
   props: {
     decks: Array,
   },
@@ -35,11 +31,11 @@ export default {
   watch: {
     decks: {
       handler(newCards) {
-        this.items = newCards.map((deck) => ({
+        this.items = newCards.map((deck) => ({          
           id: deck.id,
-          title: deck.name,
-          subtitle: deck.description,
+          name: deck.name,
           value: deck.id,
+          description: deck.description,
           props: {
             color: "primary",
           },
@@ -51,8 +47,8 @@ export default {
   computed: {
     items() {
       return this.items.filter(item => {
-        return item.title.toLowerCase().includes(this.search.toLowerCase()) ||
-          item.subtitle.toLowerCase().includes(this.search.toLowerCase())
+        return item.name.toLowerCase().includes(this.search.toLowerCase()) ||
+          item.description.toLowerCase().includes(this.search.toLowerCase())
       });
     }
   },

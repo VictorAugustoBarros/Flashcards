@@ -9,16 +9,17 @@
         <div>
           <v-row>
             <v-spacer></v-spacer>
-            <v-col cols="3" class="center-Elements-Flex">
-              <v-text-field hide-details placeholder="Name" variant="outlined" v-model="deck.name"
-                :error-messages="v$.deck.name.$errors.map((e) => e.$message)"></v-text-field>
+            <v-col cols="3">
+              <v-text-field class="card-padding" counter maxlength="30" placeholder="Name" variant="outlined"
+                v-model="deck.name" :error-messages="v$.deck.name.$errors.map((e) => e.$message)"></v-text-field>
             </v-col>
             <v-col cols="3" class="center-Elements-Flex">
-              <v-text-field hide-details placeholder="Description" variant="outlined" v-model="deck.description"
+              <v-text-field class="card-padding" maxlength="30" counter placeholder="Description" variant="outlined"
+                v-model="deck.description"
                 :error-messages="v$.deck.description.$errors.map((e) => e.$message)"></v-text-field>
             </v-col>
-            <v-col cols="2" class="center-Elements-Flex">
-              <Button text="Criar Deck" color="green" size="large" @click="addCard()"></Button>
+            <v-col cols="2">
+              <Button text="Criar Deck" color="green" size="large" @click="createDeck()"></Button>
             </v-col>
             <v-spacer></v-spacer>
           </v-row>
@@ -29,20 +30,22 @@
           <v-row>
 
             <v-spacer></v-spacer>
-            <v-col cols="2" class="center-Elements-Flex">
-              <DropdownList label="Decks" :items="['Deck1', 'Deck2', 'Deck3']" />
+            <v-col cols="2">
+              <DropdownList class="card-padding" label="Decks" :items="decks" v-model="subdeck.selectedDeckId"
+                title="name" value="id" :error-messages="v$.subdeck.selectedDeckId.$errors.map((e) => e.$message)" />
             </v-col>
 
-            <v-col cols="2" class="center-Elements-Flex">
-              <v-text-field hide-details placeholder="Name" variant="outlined" v-model="deck.name"
-                :error-messages="v$.deck.name.$errors.map((e) => e.$message)"></v-text-field>
+            <v-col cols="2">
+              <v-text-field class="card-padding" placeholder="Name" variant="outlined" v-model="subdeck.name"
+                :error-messages="v$.subdeck.name.$errors.map((e) => e.$message)"></v-text-field>
             </v-col>
-            <v-col cols="2" class="center-Elements-Flex">
-              <v-text-field hide-details placeholder="Description" variant="outlined" v-model="deck.description"
-                :error-messages="v$.deck.description.$errors.map((e) => e.$message)"></v-text-field>
+            <v-col cols="2">
+              <v-text-field class="card-padding" placeholder="Description" variant="outlined"
+                v-model="subdeck.description"
+                :error-messages="v$.subdeck.description.$errors.map((e) => e.$message)"></v-text-field>
             </v-col>
-            <v-col cols="2" class="center-Elements-Flex">
-              <Button text="Criar SubDeck" color="blue" size="large" @click="addCard()"></Button>
+            <v-col cols="2">
+              <Button text="Criar SubDeck" color="blue" size="large" @click="createSubDeck()"></Button>
             </v-col>
             <v-spacer></v-spacer>
           </v-row>
@@ -56,8 +59,12 @@
 import Button from "@/components/atoms/Button.vue";
 import DropdownList from "@/components/atoms/DropdownList.vue";
 import DeckSubdeckDropdownList from "@/components/molecules/DeckSubdeckDropdownList.vue";
+
+import { useAuthStore } from "@/store/app";
+import { addDeck } from "@/services/decks";
+import { addSubDeck } from "@/services/subdecks";
 import { useVuelidate } from "@vuelidate/core";
-import { required } from "@vuelidate/validators";
+import { required, helpers } from "@vuelidate/validators";
 
 export default {
   name: "CreateDeckExpander",
@@ -72,34 +79,73 @@ export default {
   validations() {
     return {
       deck: {
-        name: { required },
-        description: { required }
+        name: {
+          required: helpers.withMessage('Valor Obrigatório', required)
+        },
+        description: {
+          required: helpers.withMessage('Valor Obrigatório', required)
+        }
       },
 
       subdeck: {
-        name: { required },
-        description: { required }
+        name: { required: helpers.withMessage('Valor Obrigatório', required) },
+        description: { required: helpers.withMessage('Valor Obrigatório', required) },
+        selectedDeckId: { required: helpers.withMessage('Valor Obrigatório', required) }
       },
-    };
-  },
-  data() {
-    return {
-      deck: {
-        name: "",
-        description: "",
-      },
-      subdeck: {
-        name: "",
-        description: "",
-      }
     };
   },
   props: {
-    userDecks: Array,
-    userSubDecks: Array,
+    decks: Array
+  },
+  data() {
+    return {
+      authStore: useAuthStore(),
+
+      deck: {
+        name: null,
+        description: "",
+      },
+
+      subdeck: {
+        selectedDeckId: null,
+        name: "",
+        description: "",
+      },
+    };
   },
   methods: {
+    async createDeck() {
+      this.v$.deck.$touch();
 
+      const isFormCorrect = await this.v$.deck.$validate();
+      if (!isFormCorrect) return;
+
+      const deckData = await addDeck(this.deck.name, this.deck.description);
+
+      if (deckData.response.success) {
+        this.emitter.emit("alertBox", { title: "Deck", message: "Deck criado com sucesso!", type: "success" });
+        this.$emit("loadDecks")
+
+      } else {
+        this.emitter.emit("alertBox", { title: "Deck", message: "Falha ao criar Deck!", type: "error" });
+      }
+    },
+    async createSubDeck() {
+      const isFormCorrect = await this.v$.subdeck.$validate();
+      if (!isFormCorrect) return;
+
+      const subdeckData = await addSubDeck(
+        this.subdeck.selectedDeckId,
+        this.subdeck.name,
+        this.subdeck.description
+      );
+      if (subdeckData.response.success) {
+        this.emitter.emit("alertBox", { title: "SubDeck", message: "SubDeck criado com sucesso!", type: "success" });
+
+      } else {
+        this.emitter.emit("alertBox", { title: "SubDeck", message: "Falha ao criar SubDeck!", type: "error" });
+      }
+    },
   },
 };
 </script>

@@ -15,4 +15,12 @@ const ADD_DECK = gql`
   }
 `;
 
-export { ADD_DECK };
+const EDIT_DECK = gql`
+
+`;
+
+const DELETE_DECK = gql`
+
+`;
+
+export { ADD_DECK, EDIT_DECK, DELETE_DECK };
