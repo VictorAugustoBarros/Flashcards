@@ -1,5 +1,5 @@
 <template>
-  <v-app-bar color="blue" :elevation="1" class="app-bar center-Elements-Flex">
+  <v-app-bar color="transparent" :elevation="0" class="center-Elements-Flex">
     <div class="title-container">
       <router-link to="/" class="title">Dashboard</router-link>
       <router-link to="/decks" class="title">Decks</router-link>

@@ -5,7 +5,13 @@
     </v-col>
   </v-row>
 
-  <CardPreview :cards="userCards" />
+  <v-row justify="center" style="height: 100%;">
+    <v-sheet rounded="xl" width="95%">
+      <div style="height: 100%;padding-top: 50px;">
+        <CardPreview :cards="userCards" />
+      </div>
+    </v-sheet>
+  </v-row>
 </template>
 
 <script>

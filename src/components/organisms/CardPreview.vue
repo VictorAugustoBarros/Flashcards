@@ -16,7 +16,7 @@
     </v-col>
     <v-col cols="1" />
     <v-col cols="6">
-      <div class="center-Elements-Flex" style="height: 80vh;">
+      <div class="center-Elements-Flex" style="height: 70vh;">
         <Card @card-removed="this.card.id = null" v-if="this.card.id" :cardId="this.card.id" :subdeckId="subDeckId" :question="this.card.question" :answer="this.card.answer" />
       </div>
     </v-col>

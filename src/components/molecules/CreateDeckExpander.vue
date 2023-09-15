@@ -1,55 +1,65 @@
 <template>
   <v-expansion-panels>
-    <v-expansion-panel rounded="True">
+    <v-expansion-panel bg-color="transparent" elevation="0" flat>
       <v-expansion-panel-title expand-icon="mdi-plus" collapse-icon="mdi-minus">
-        Novo Deck
+        <v-spacer />
+        <v-col cols="1" class="center-Elements-Flex">
+          Deck
+        </v-col>
       </v-expansion-panel-title>
 
       <v-expansion-panel-text>
-        <div>
-          <v-row>
-            <v-spacer></v-spacer>
-            <v-col cols="3">
-              <v-text-field class="card-padding" counter maxlength="30" placeholder="Name" variant="outlined"
-                v-model="deck.name" :error-messages="v$.deck.name.$errors.map((e) => e.$message)"></v-text-field>
-            </v-col>
-            <v-col cols="3" class="center-Elements-Flex">
-              <v-text-field class="card-padding" maxlength="30" counter placeholder="Description" variant="outlined"
-                v-model="deck.description"
-                :error-messages="v$.deck.description.$errors.map((e) => e.$message)"></v-text-field>
-            </v-col>
-            <v-col cols="2">
-              <Button text="Criar Deck" color="green" size="large" @click="createDeck()"></Button>
-            </v-col>
-            <v-spacer></v-spacer>
-          </v-row>
-          <v-row>
-            <v-divider></v-divider>
-          </v-row>
+        <v-row>
+          <v-spacer></v-spacer>
+          <v-col cols="3">
+            <v-text-field class="card-padding" counter maxlength="30" placeholder="Name" variant="outlined"
+              v-model="deck.name" :error-messages="v$.deck.name.$errors.map((e) => e.$message)"></v-text-field>
+          </v-col>
+          <v-col cols="3" class="center-Elements-Flex">
+            <v-text-field class="card-padding" maxlength="30" counter placeholder="Description" variant="outlined"
+              v-model="deck.description"
+              :error-messages="v$.deck.description.$errors.map((e) => e.$message)"></v-text-field>
+          </v-col>
+          <v-col cols="2">
+            <Button text="Criar Deck" color="green" size="large" @click="createDeck()"></Button>
+          </v-col>
+          <v-spacer></v-spacer>
+        </v-row>
+      </v-expansion-panel-text>
+    </v-expansion-panel>
+  </v-expansion-panels>
 
-          <v-row>
+  <v-expansion-panels>
+    <v-expansion-panel bg-color="transparent" elevation="0" flat>
+      <v-expansion-panel-title expand-icon="mdi-plus" collapse-icon="mdi-minus">
+        <v-spacer />
+        <v-col cols="1" class="center-Elements-Flex">
+          SubDeck
+        </v-col>
+      </v-expansion-panel-title>
 
-            <v-spacer></v-spacer>
-            <v-col cols="2">
-              <DropdownList class="card-padding" label="Decks" :items="decks" v-model="subdeck.selectedDeckId"
-                title="name" value="id" :error-messages="v$.subdeck.selectedDeckId.$errors.map((e) => e.$message)" />
-            </v-col>
+      <v-expansion-panel-text>
+        <v-row>
+          <v-spacer></v-spacer>
+          <v-col cols="2">
+            <DropdownList class="card-padding" label="Decks" :items="decks" v-model="subdeck.selectedDeckId" title="name"
+              value="id" :error-messages="v$.subdeck.selectedDeckId.$errors.map((e) => e.$message)" />
+          </v-col>
 
-            <v-col cols="2">
-              <v-text-field class="card-padding" placeholder="Name" variant="outlined" v-model="subdeck.name"
-                :error-messages="v$.subdeck.name.$errors.map((e) => e.$message)"></v-text-field>
-            </v-col>
-            <v-col cols="2">
-              <v-text-field class="card-padding" placeholder="Description" variant="outlined"
-                v-model="subdeck.description"
-                :error-messages="v$.subdeck.description.$errors.map((e) => e.$message)"></v-text-field>
-            </v-col>
-            <v-col cols="2">
-              <Button text="Criar SubDeck" color="blue" size="large" @click="createSubDeck()"></Button>
-            </v-col>
-            <v-spacer></v-spacer>
-          </v-row>
-        </div>
+          <v-col cols="2">
+            <v-text-field class="card-padding" placeholder="Name" variant="outlined" v-model="subdeck.name" maxlength="30"
+              counter :error-messages="v$.subdeck.name.$errors.map((e) => e.$message)"></v-text-field>
+          </v-col>
+          <v-col cols="2">
+            <v-text-field class="card-padding" placeholder="Description" variant="outlined" v-model="subdeck.description"
+              maxlength="30" counter
+              :error-messages="v$.subdeck.description.$errors.map((e) => e.$message)"></v-text-field>
+          </v-col>
+          <v-col cols="2">
+            <Button text="Criar SubDeck" color="blue" size="large" @click="createSubDeck()"></Button>
+          </v-col>
+          <v-spacer></v-spacer>
+        </v-row>
       </v-expansion-panel-text>
     </v-expansion-panel>
   </v-expansion-panels>
@@ -100,6 +110,10 @@ export default {
   data() {
     return {
       authStore: useAuthStore(),
+      elevationDeck: 0,
+      isExpandedDeck: false,
+      elevationSubDeck: 0,
+      isExpandedSubDeck: false,
 
       deck: {
         name: null,
@@ -145,7 +159,7 @@ export default {
       } else {
         this.emitter.emit("alertBox", { title: "SubDeck", message: "Falha ao criar SubDeck!", type: "error" });
       }
-    },
+    }
   },
 };
 </script>
@@ -158,3 +172,5 @@ export default {
   width: 100%;
 }
 </style>
+
+
