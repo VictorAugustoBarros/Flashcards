@@ -1,22 +1,24 @@
 <template>
-  <v-row justify="center" style="height: 100%;">
-    <v-sheet rounded="xl" width="95%">
-      <div style="height: 100%;padding-top: 50px;">
+  <div class="center-Elements-Flex" style="height: 100vh;overflow: auto;">
+    <v-sheet rounded="xl" width="95%" height="100%" class="sheet">
+      
+      <div style="padding: 50px;height: 100%">
         <v-row>
-          <v-col cols="3">
+          <v-col cols="3" class="center-Elements-Flex">
             <CardDashboard text="Decks" icon="mdi-cards" count="10" />
           </v-col>
-          <v-col cols="3">
+          <v-col cols="3" class="center-Elements-Flex">
             <CardDashboard text="SubDecks" icon="mdi-cards" />
           </v-col>
-          <v-col cols="3">
+          <v-col cols="3" class="center-Elements-Flex">
             <CardDashboard text="Card" icon="mdi-cards-playing-diamond" />
           </v-col>
-          <v-col cols="3">
+          <v-col cols="3" class="center-Elements-Flex">
             <CardDashboard text="Pendentes" icon="mdi-book-alphabet" color="red" />
           </v-col>
         </v-row>
-        <v-row style="padding-top: 100px">
+        
+        <v-row style="padding-top: 150px">
           <v-col cols="1" />
           <v-col cols="5">
             <AreaChart />
@@ -29,7 +31,7 @@
 
       </div>
     </v-sheet>
-  </v-row>
+  </div>
 </template>
 
 <script>
@@ -40,7 +42,7 @@ import PieChart from "@/components/atoms/PieChart.vue";
 
 
 export default {
-  name: "HomePage",
+  name: "DashboardPage",
   components: {
     CardDashboard,
     AreaChart,

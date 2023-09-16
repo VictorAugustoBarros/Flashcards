@@ -1,15 +1,13 @@
 <template>
-  <v-row>
-    <CreateDeckExpander :decks="decks" @load-decks="loadDecks()" />
-  </v-row>
+  <div class="center-Elements-Flex" style="height: 100vh;overflow: auto;">
+    <v-sheet rounded="xl" width="95%" height="100%" class="sheet">
+      <CreateDeckExpander :decks="decks" @load-decks="loadDecks()" />
 
-  <v-row justify="center" style="height: 100%;">
-    <v-sheet rounded="xl" width="95%">
       <div style="height: 100%;padding-top: 50px;">
         <DeckPreview :decks="decks" />
       </div>
     </v-sheet>
-  </v-row>
+  </div>
 </template>
 
 <script>

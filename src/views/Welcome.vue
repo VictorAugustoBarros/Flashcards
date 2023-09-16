@@ -4,7 +4,7 @@
       <body>
         <AppBarWelcome />
 
-        <default-view />
+        <router-view />
       </body>
     </html>
   </v-app>
@@ -13,5 +13,4 @@
 <script setup>
 import AppBarWelcome from "@/layouts/default/AppBarWelcome.vue";
 
-import DefaultView from "@/layouts/default/View.vue";
 </script>
