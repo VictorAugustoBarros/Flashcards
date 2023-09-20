@@ -4,7 +4,7 @@
       <v-expansion-panel-title expand-icon="mdi-plus" collapse-icon="mdi-minus">
         <v-spacer />
         <v-col cols="1" class="center-Elements-Flex">
-          Deck
+          SubDeck
         </v-col>
         <v-spacer />
       </v-expansion-panel-title>
@@ -12,17 +12,22 @@
       <v-expansion-panel-text>
         <v-row>
           <v-spacer></v-spacer>
-          <v-col cols="5">
-            <v-text-field class="card-padding" counter maxlength="30" placeholder="Name" variant="outlined"
-              v-model="deck.name" :error-messages="v$.deck.name.$errors.map((e) => e.$message)"></v-text-field>
+          <v-col cols="3">
+            <DropdownList class="card-padding" label="Decks" :items="decks" v-model="subdeck.selectedDeckId" title="name"
+              value="id" :error-messages="v$.subdeck.selectedDeckId.$errors.map((e) => e.$message)" />
           </v-col>
-          <v-col cols="5" class="center-Elements-Flex">
-            <v-text-field class="card-padding" maxlength="30" counter placeholder="Description" variant="outlined"
-              v-model="deck.description"
-              :error-messages="v$.deck.description.$errors.map((e) => e.$message)"></v-text-field>
+
+          <v-col cols="3">
+            <v-text-field class="card-padding" placeholder="Name" variant="outlined" v-model="subdeck.name" maxlength="30"
+              counter :error-messages="v$.subdeck.name.$errors.map((e) => e.$message)"></v-text-field>
+          </v-col>
+          <v-col cols="4">
+            <v-text-field class="card-padding" placeholder="Description" variant="outlined" v-model="subdeck.description"
+              maxlength="30" counter
+              :error-messages="v$.subdeck.description.$errors.map((e) => e.$message)"></v-text-field>
           </v-col>
           <v-col cols="2">
-            <Button text="Criar" color="green" size="large" @click="createDeck()"></Button>
+            <Button text="Criar" color="blue" size="large" @click="createSubDeck()"></Button>
           </v-col>
           <v-spacer></v-spacer>
         </v-row>
@@ -43,7 +48,7 @@ import { useVuelidate } from "@vuelidate/core";
 import { required, helpers } from "@vuelidate/validators";
 
 export default {
-  name: "CreateDeckExpander",
+  name: "CreateSubDeckExpander",
   components: {
     Button,
     DropdownList,

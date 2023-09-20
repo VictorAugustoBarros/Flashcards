@@ -1,4 +1,4 @@
-import Card from "@/components/molecules/Card.vue";
+import Card from "@/components/organisms/Card.vue";
 
 export default {
   title: "Card",

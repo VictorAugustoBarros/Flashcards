@@ -1,19 +1,17 @@
 <template>
-  <div>
-    <v-card style="overflow: auto;width: 800px;height: 600px;" rounded="xl">
-      <v-text-field class="fixed-search" style="text-align: center;" v-model="search" label="Pesquisar" outlined
-        @click:clear="clearSearch" @input="filterItems"></v-text-field>
+  <!-- {{ this.cards }} -->
+  <v-card style="overflow: auto;height: 100%;" rounded="xl">
+    <v-text-field class="fixed-search" style="text-align: center;" v-model="search" label="Pesquisar" outlined
+      @click:clear="clearSearch" @input="filterItems"></v-text-field>
 
-      <v-list lines="two" class="item-list" style="max-height: 500px; overflow-y: auto;">
-        <v-list-item 
-        :active="item.id === activeId"
-        rounded="xl" style="align-items: center;text-align: center;justify-content: center;"
-          v-for="(item, i) in items" :key="i" :value="item" :title="item.title" :subtitle="item.subtitle"
-          :color="item.props.color" @click="$emit('loadCard', item.id)">
-        </v-list-item>
-      </v-list>
-    </v-card>
-  </div>
+    <v-list lines="two" class="item-list" style="max-height: 500px; overflow-y: auto;">
+      <v-list-item :active="item.id === activeId" rounded="xl"
+        style="align-items: center;text-align: center;justify-content: center;" v-for="(item, i) in items" :key="i"
+        :value="item" :title="item.title" :subtitle="item.subtitle" :color="item.props.color"
+        @click="$emit('loadCard', item.id)">
+      </v-list-item>
+    </v-list>
+  </v-card>
 </template>
 
 <script>

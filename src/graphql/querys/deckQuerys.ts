@@ -2,16 +2,25 @@ import { gql } from "graphql-request";
 
 const GET_USER_DECKS = gql`
   query {
-    get_user_deck {
+    get_user_deck{
       decks {
-        id
-        name
-        description
+          id
+          name
+          description
+          sub_deck {
+              id
+              name
+              cards {
+                  id
+                  question
+                  answer
+              }
+          }
       }
       response {
-        success
-        message
-        error
+          success
+          message
+          error
       }
     }
   }

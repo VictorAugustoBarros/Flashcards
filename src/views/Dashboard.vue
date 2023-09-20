@@ -18,7 +18,7 @@
           </v-col>
         </v-row>
         
-        <v-row style="padding-top: 150px">
+        <v-row style="padding-top: 150px;">
           <v-col cols="1" />
           <v-col cols="5">
             <AreaChart />
@@ -37,8 +37,8 @@
 <script>
 import { useAuthStore } from "@/store/app";
 import CardDashboard from "@/components/molecules/CardDashboard.vue";
-import AreaChart from "@/components/atoms/AreaChart.vue";
-import PieChart from "@/components/atoms/PieChart.vue";
+import AreaChart from "@/components/molecules/AreaChart.vue";
+import PieChart from "@/components/molecules/PieChart.vue";
 
 
 export default {

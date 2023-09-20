@@ -9,7 +9,7 @@
       <div class="symbol"></div>
 
       <div class="box__ghost-container">
-        <div class="box__ghost-eyes">
+        <div class="box__ghost-eyes" :style="{ transform: `translate(${xAxis}%, -${yAxis}%)` }">
           <div class="box__eye-left"></div>
           <div class="box__eye-right"></div>
         </div>
@@ -27,10 +27,12 @@
     <div class="box__description">
       <div class="box__description-container">
         <div class="box__description-title">Whoops!</div>
-        <div class="box__description-text">It seems like we couldn't find the page you were looking for</div>
+        <div class="box__description-text">Nenhum Card cadastrado!</div>
       </div>
-
-      <a href="https://codepen.io/diogo_ml_gomes/" target="_blank" class="box__button">Go back</a>
+      
+      <v-btn class="box__button" @click="$emit('clickCreateCard')">
+        Criar Card
+      </v-btn>
 
     </div>
 
@@ -39,47 +41,51 @@
 
 <script>
 export default {
-  name: "404Page",
+  name: "Component404",
   props: {
     description: String
-  }
+  },
+  data() {
+    return {
+      pageX: 0,
+      pageY: 0,
+      mouseY: 0,
+      mouseX: 0,
+      xAxis: 0,
+      yAxis: 0,
+    };
+  },
+  mounted() {
+    this.pageX = window.innerWidth;
+    this.pageY = window.innerHeight;
+
+    window.addEventListener("mousemove", this.handleMouseMove);
+  },
+  methods: {
+    handleMouseMove(event) {
+      //verticalAxis
+      this.mouseY = event.pageY;
+      this.yAxis = (this.pageY / 2 - this.mouseY) / this.pageY * 300;
+
+      //horizontalAxis
+      this.mouseX = event.pageX / -this.pageX;
+      this.xAxis = -this.mouseX * 100 - 100;
+    },
+  },
 };
-
-//based on https://dribbble.com/shots/3913847-404-page
-
-var pageX = $(document).width();
-var pageY = $(document).height();
-var mouseY = 0;
-var mouseX = 0;
-
-$(document).mousemove(function (event) {
-  //verticalAxis
-  mouseY = event.pageY;
-  yAxis = (pageY / 2 - mouseY) / pageY * 300;
-  //horizontalAxis
-  mouseX = event.pageX / -pageX;
-  xAxis = -mouseX * 100 - 100;
-
-  $('.box__ghost-eyes').css({ 'transform': 'translate(' + xAxis + '%,-' + yAxis + '%)' });
-
-});
 </script>
 
 
-<style>
+<style lang="scss">
 @import url(https://fonts.googleapis.com/css?family=Ubuntu);
+
 //variables
 $purple: #28254C;
-$l-purple: #332F63;
+$l-purple: white;
 $t-purple: #8C8AA7;
-$pink: #FF5E65;
-$white: #fff;
-
-html,
-body {
-  background: $purple;
-  font-family: 'Ubuntu';
-}
+$pink: transparent;
+$white: #277abe;
+$borderBtn: #277abe;
 
 * {
   box-sizing: border-box;
@@ -87,15 +93,12 @@ body {
 
 .box {
   width: 350px;
-  height: 100%;
+  height: auto;
   max-height: 600px;
   min-height: 450px;
   background: $l-purple;
   border-radius: 20px;
   position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
   padding: 30px 50px;
 
   .box__ghost {
@@ -246,7 +249,7 @@ body {
         position: absolute;
         left: 50%;
         top: 45%;
-        //transform: translate(-50%, -45%); 
+        transform: translate(-50%, -45%); 
         height: 12px;
         width: 70px;
 
@@ -336,6 +339,7 @@ body {
       background: $pink;
       border: 1px solid transparent;
       border-radius: 50px;
+      border-color: $borderBtn;
       height: 50px;
       text-align: center;
       text-decoration: none;
@@ -419,4 +423,5 @@ body {
   100% {
     opacity: .2;
   }
-}</style>
+}
+</style>

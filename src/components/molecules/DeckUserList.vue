@@ -1,10 +1,10 @@
 <template>
-  <v-card style="overflow: auto;width: 90%;height: 700px;" rounded="xl">
-    <v-text-field class="fixed-search" style="text-align: center;" v-model="search" label="Pesquisar" outlined
-      @click:clear="clearSearch" @input="filterItems"></v-text-field>
+  <!-- <v-text-field class="fixed-search" style="text-align: center;" v-model="search" label="Pesquisar" outlined
+    @click:clear="clearSearch" @input="filterItems"></v-text-field> -->
 
+  <v-card style="overflow: auto;width: 90%;height: 700px;" rounded="xl">
     <v-list class="item-list" style="max-height: 500px; overflow-y: auto;">
-      <Deck v-for="deck in decks" :name="deck.name" :description="deck.description"/>
+      <Deck v-for="deck in decks" :name="deck.name" :description="deck.description" />
     </v-list>
   </v-card>
 </template>
@@ -29,7 +29,7 @@ export default {
   watch: {
     decks: {
       handler(newCards) {
-        this.items = newCards.map((deck) => ({          
+        this.items = newCards.map((deck) => ({
           id: deck.id,
           name: deck.name,
           value: deck.id,

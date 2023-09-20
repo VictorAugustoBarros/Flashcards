@@ -1,6 +1,6 @@
 <template>
-  <v-expansion-panels>
-    <v-expansion-panel bg-color="transparent" elevation="0" rounded="True">
+  <v-expansion-panels v-model="this.panel">
+    <v-expansion-panel bg-color="transparent" elevation="0" rounded="True" value="cardExpander">
       <v-expansion-panel-title expand-icon="mdi-plus" collapse-icon="mdi-minus">
         <v-spacer />
         <v-col cols="1" class="center-Elements-Flex">
@@ -16,7 +16,9 @@
             </v-col>
 
             <v-col cols="4" class="center-Elements-Flex">
-              <DeckSubdeckDropdownList class="card-padding" @changeSubDeck="changeSubDeck" cols="6" />
+              <DeckSubdeckDropdownList :decks="decks" class="card-padding" @change-deck="changeDeck"
+                @change-subdeck="changeSubDeck" cols="6" :selectedDeckId="this.card.deckId"
+                :selectedsubdeckId="this.card.subdeckId" />
             </v-col>
             <v-col cols="2" class="center-Elements-Flex">
               <v-text-field counter maxlength="30" class="card-padding" placeholder="Question" variant="outlined"
@@ -27,7 +29,7 @@
                 v-model="card.answer" :error-messages="v$.card.answer.$errors.map((e) => e.$message)"></v-text-field>
             </v-col>
             <v-col cols="2" class="center-Elements-Flex">
-              <Button text="Criar Card" color="green" size="large" @click="addCard()"></Button>
+              <Button text="Criar" color="green" size="large" @click="addCard()"></Button>
             </v-col>
           </v-row>
         </div>
@@ -43,6 +45,7 @@ import DeckSubdeckDropdownList from "@/components/molecules/DeckSubdeckDropdownL
 import { addCard } from "@/services/cards";
 import { useVuelidate } from "@vuelidate/core";
 import { required, helpers } from "@vuelidate/validators";
+import { decksStore } from "@/store/decks";
 
 export default {
   name: "CreateCardExpander",
@@ -50,6 +53,21 @@ export default {
     Button,
     DropdownList,
     DeckSubdeckDropdownList,
+  },
+  data() {
+    return {
+      decksStore: decksStore(),
+      decks: [],
+      cardTypes: ["Basic"],
+      panel: null,
+      elevation: 0,
+      card: {
+        deckId: null,
+        subdeckId: null,
+        question: null,
+        answer: null,
+      },
+    };
   },
   setup() {
     return { v$: useVuelidate() };
@@ -62,43 +80,50 @@ export default {
       },
     };
   },
-  data() {
-    return {
-      elevation: 0,
-      isExpanded: false,
-      card: {
-        deckId: null,
-        subdeckId: null,
-        question: null,
-        answer: null,
-      },
-    };
-  },
-  props: {
-    cardTypes: {
-      type: Array,
-    },
-    userDecks: Array,
-    userSubDecks: Array,
+  async created() {
+    this.decks = this.decksStore.getDecks
+    console.log(this.decks)
+
+    this.emitter.on("openExpander", (values) => {
+      this.card.deckId = values.deckId;
+      this.card.subdeckId = values.subdeckId;
+
+      this.panel = "cardExpander"
+    });
   },
   methods: {
+    changeDeck(deckId) {
+      this.card.deckId = deckId;
+    },
     changeSubDeck(subdeckId) {
-      this.subdeckId = subdeckId;
+      this.card.subdeckId = subdeckId;
     },
     async addCard() {
       const isFormCorrect = await this.v$.$validate();
       if (!isFormCorrect) return;
 
       const cardResponse = await addCard(
-        this.subdeckId,
+        this.card.subdeckId,
         this.card.question,
         this.card.answer
       );
+
       if (cardResponse.response.success) {
+        const deck = this.decks.find(deck => deck.id === this.card.deckId);
+        const subdeck = deck.sub_deck.find(subdeck => subdeck.id === this.card.deckId);
+        subdeck.cards.push({
+          id: cardResponse.card.id,
+          question: this.card.question,
+          answer: this.card.answer,
+        })
+        
+        this.emitter.emit("reloadDecks", this.decks)
         this.emitter.emit("alertBox", { title: "Card", message: "Criado com sucesso!", type: "success" });
-        this.emitter.emit("reloadCardUserList", this.subdeckId);
+
+      } else {
+        this.emitter.emit("alertBox", { title: "Card", message: "Falha ao criar Card!", type: "error" });
       }
     }
-  },
+  }
 };
 </script>

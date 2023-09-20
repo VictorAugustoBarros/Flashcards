@@ -50,12 +50,12 @@ const routes = [
       {
         path: "decks",
         name: "Decks",
-        component: () => import("@/views/Decks.vue"),
+        component: () => import("@/components/pages/DecksPage.vue"),
       },
       {
         path: "cards",
         name: "Cards",
-        component: () => import("@/views/Cards.vue"),
+        component: () => import("@/components/pages/CardsPage.vue"),
       },
     ],
   },

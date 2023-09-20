@@ -1,9 +1,11 @@
 import { withVuetifyTheme } from "./withVuetifyTheme.decorator";
 import { setup } from '@storybook/vue3'
+
 import vuetify from "../src/plugins/vuetify";
+import pinia from "../src/store";
 
 setup((app) => {
-  app.use(vuetify)
+  app.use(vuetify).use(pinia)
 })
 
 export const parameters = {
