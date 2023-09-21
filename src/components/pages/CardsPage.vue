@@ -1,5 +1,4 @@
 <template>
-  {{ decks }}
   <div class="center-Elements-Flex" style="overflow: auto; height: 100%;">
     <v-sheet rounded="xl" width="95%" height="100%" class="sheet">
       <div style="display: grid; grid-template-rows: auto 1fr; height: 100%;">

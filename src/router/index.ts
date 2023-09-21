@@ -73,9 +73,16 @@ const router = createRouter({
 // Middleware para verificar a autenticação
 
 import { useAuthStore } from "@/store/app";
+import { useDecksStore } from "@/store/decks";
 
 router.beforeEach((to, from, next) => {
   const authStore = useAuthStore();
+  const decksStore = useDecksStore();
+
+  if (!decksStore.getDecks.length){
+    decksStore.loadDecks()
+  }
+
   const isAuthenticated = authStore.hasToken;
 
   // console.log(from.path + " -> " + to.path + " -> " + isAuthenticated);
@@ -83,14 +90,17 @@ router.beforeEach((to, from, next) => {
   if (authStore.getFirstAccess) {
     authStore.setFirstAccess();
     next("/how-it-works");
+
   } else if (to.path === "/") {
     if (isAuthenticated) {
       next();
+
     } else {
       next("/how-it-works");
     }
   } else if (to.path === "/login" || to.path === "/register") {
     if (isAuthenticated) {
+
       next("/");
     } else {
       next();

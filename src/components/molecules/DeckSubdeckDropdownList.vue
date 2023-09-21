@@ -1,5 +1,11 @@
 <template>
+  <!-- TODO: Ajustar o carregamento dos dados created/updated, clicar no botão do fantasma com o expander aberto e fechado -->
   <v-row>
+    {{ this.deckId }}
+    {{ this.subdeckId }}
+    --------
+    {{ this.selectedDeckId }}
+    {{ this.selectedsubdeckId }}
     <v-col :cols="cols">
       <DropdownList label="Decks" :items="decks" title="name" value="id" v-model="this.deckId"
         :error-messages="v$.deckId.$errors.map((e) => e.$message)" />
@@ -15,7 +21,8 @@
 <script>
 import DropdownList from "@/components/atoms/DropdownList.vue";
 import { useVuelidate } from "@vuelidate/core";
-import { required, helpers } from "@vuelidate/validators";
+import { required, helpers, not } from "@vuelidate/validators";
+import { useDecksStore } from "@/store/decks";
 
 export default {
   name: "DeckSubdeckDropdownList",
@@ -24,8 +31,6 @@ export default {
   },
   props: {
     cols: String,
-    decks: Array,
-    subdecks: Array,
     selectedDeckId: Int16Array,
     selectedsubdeckId: Int16Array,
   },
@@ -34,12 +39,42 @@ export default {
   },
   data() {
     return {
-      decks: this.decks,
+      deckStore: useDecksStore(),
+      decks: [],
       subdecks: [],
 
       deckId: this.selectedDeckId,
       subdeckId: this.selectedsubdeckId
     };
+  },
+  created() {
+    this.decks = this.deckStore.getDecks;
+    
+    if (this.selectedDeckId){
+      this.deckId = this.selectedDeckId;
+      this.subdecks = this.deckStore.getSubDecks(this.deckId)
+    }
+    
+    if (this.selectedsubdeckId){
+      this.subdeckId = this.selectedsubdeckId;
+    }
+  },
+  async updated(){
+    console.log("updated...")
+    if (this.selectedDeckId){
+      this.deckId = this.selectedDeckId;
+      
+      if (!this.subdecks.length){
+        console.log("loadSubdecks...")
+        this.subdecks = await this.deckStore.getSubDecks(this.deckId)
+        console.log("loadSubdecks-ok...")
+      }
+    }
+
+    if (this.selectedsubdeckId){
+      console.log("subdeckId...")
+      this.subdeckId = this.selectedDeckId
+    }
   },
   validations() {
     return {
@@ -53,13 +88,14 @@ export default {
       if (!isFormCorrect) return;
 
       this.subdeckId = null;
-      const deck = this.decks.find(deck => deck.id === this.deckId);
-      this.subdecks = deck.sub_deck ? deck.sub_deck : []
+      this.subdecks = this.deckStore.getSubDecks(this.deckId)
 
+      console.log("changeDeck...")
       this.$emit("changeDeck", this.deckId)
     },
     subdeckId() {
       if (this.subdeckId){
+        console.log("changeSubdeck...")
         this.$emit("changeSubdeck", this.subdeckId)
       }
     }

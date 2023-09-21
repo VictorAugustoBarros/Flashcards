@@ -3,7 +3,6 @@ import { loginUser } from "@/services/users";
 import { useAuthStore } from "@/store/app";
 
 
-console.log("Teste")
 const variables = {
   "email": "teste@teste.com",
   "password": "teste123"

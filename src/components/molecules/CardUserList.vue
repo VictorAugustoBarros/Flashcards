@@ -1,49 +1,46 @@
 <template>
-  <!-- {{ this.cards }} -->
   <v-card style="overflow: auto;height: 100%;" rounded="xl">
     <v-text-field class="fixed-search" style="text-align: center;" v-model="search" label="Pesquisar" outlined
       @click:clear="clearSearch" @input="filterItems"></v-text-field>
 
     <v-list lines="two" class="item-list" style="max-height: 500px; overflow-y: auto;">
-      <v-list-item :active="item.id === activeId" rounded="xl"
-        style="align-items: center;text-align: center;justify-content: center;" v-for="(item, i) in items" :key="i"
-        :value="item" :title="item.title" :subtitle="item.subtitle" :color="item.props.color"
-        @click="$emit('loadCard', item.id)">
+      <v-list-item v-for="card in this.cards" :key="card.id" :active="card.id === activeId" rounded="xl"
+        style="align-items: center;text-align: center;justify-content: center;" :value="card" :title="card.question"
+        :subtitle="card.answer" color="primary" @click="$emit('loadCard', card.id)">
       </v-list-item>
     </v-list>
   </v-card>
 </template>
 
 <script>
+import { useDecksStore } from "@/store/decks";
+
 export default {
   name: "CardUserList",
   props: {
-    cards: Array,
+    deckId: Int16Array,
+    subdeckId: Int16Array,
     activeId: Int16Array
   },
   data: () => ({
+    deckStore: useDecksStore(),
     selected: [2],
-    search: '',
+    cards: [],
     items: [],
+    search: '',
   }),
   unmounted() {
     this.$emit("removeCard");
   },
-  watch: {
-    cards: {
-      handler(newCards) {
-        this.items = newCards.map((card) => ({
-          id: card.id,
-          title: card.question,
-          subtitle: card.answer,
-          value: card.id,
-          props: {
-            color: "primary",
-          },
-        }));
-      },
-      immediate: true,
-    }
+  created() {
+    this.cards = this.deckStore.getCards(this.deckId, this.subdeckId);
+
+    this.emitter.on("reloadCardUserList", () => {
+      this.cards = this.deckStore.getCards(this.deckId, this.subdeckId)
+    });
+  },
+  updated(){
+    this.cards = this.deckStore.getCards(this.deckId, this.subdeckId)
   },
   computed: {
     items() {

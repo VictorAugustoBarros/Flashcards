@@ -25,6 +25,7 @@
 import ConfirmModal from "@/components/organisms/ConfirmModal.vue";
 import Button from "@/components/atoms/Button.vue";
 import { deleteCard, editCard } from "@/services/cards";
+import { useDecksStore } from "@/store/decks";
 
 export default {
   name: "Card",
@@ -34,11 +35,14 @@ export default {
   },
   data() {
     return {
+      decksStore: useDecksStore(),
       deleteDialog: false,
       newCard: this.card
     }
   },
   props: {
+    deckId: Int16Array,
+    subdeckId: Int16Array,
     card: Object,
     ButtonVariant: {
       type: String,
@@ -52,8 +56,11 @@ export default {
     async editCard() {
       const response = await editCard(this.newCard.id, this.newCard.question, this.newCard.answer)
       if (response.success) {
+        await this.decksStore.updateCard(this.deckId, this.subdeckId, this.newCard.id, this.newCard)
+
         this.emitter.emit("alertBox", { title: "Card", message: "Card atualizado com sucesso!", type: "success" });
-        this.$emit("updatedCard", this.newCard);
+        this.emitter.emit("reloadCardUserList");
+        this.$emit("updatedCard", {...this.newCard})
         this.deleteDialog = false;
 
       } else {
@@ -63,11 +70,16 @@ export default {
     async deleteCard() {
       const response = await deleteCard(this.newCard.id)
       if (response.success) {
+        this.decksStore.deleteCard(this.deckId, this.subdeckId, this.newCard.id)
+
         this.emitter.emit("alertBox", { title: "Card", message: "Card deletado com sucesso!", type: "success" });
-        this.$emit("deletedCard", this.newCard);
+        this.emitter.emit("reloadCardUserList");
+        this.$emit("deletedCard")
+
         this.deleteDialog = false;
 
       } else {
+        console.log(response)
         this.emitter.emit("alertBox", { title: "Card", message: "Falha ao deletar card!", type: "error" });
       }
     },

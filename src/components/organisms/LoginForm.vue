@@ -30,10 +30,9 @@
   import { useVuelidate } from "@vuelidate/core";
   import { email, required } from "@vuelidate/validators";
   import { useAuthStore } from "@/store/app";
-  import { decksStore } from "@/store/decks";
+  import { useDecksStore } from "@/store/decks";
   import { loginUser } from "@/services/users";
   
-  import { getUserDecks } from "@/services/decks";
 
 
   export default {
@@ -43,7 +42,6 @@
     },
     data() {
       return {
-        authStore: useAuthStore(),
         email: "teste@teste.com",
         password: "teste123",
       };
@@ -64,12 +62,9 @@
   
         if (loginResponse.response.success) {
           const jwt_token = loginResponse.jwt_token;
-          this.authStore.setToken(jwt_token);
+          useAuthStore().setToken(jwt_token);
 
-          const userDecksResponse = await getUserDecks();
-          if (userDecksResponse.response.success) {
-            decksStore().setDecks(userDecksResponse.decks)
-          }
+          await useDecksStore().loadDecks()
 
           router.push("/");
         }

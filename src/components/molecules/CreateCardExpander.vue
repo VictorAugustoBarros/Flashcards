@@ -16,9 +16,9 @@
             </v-col>
 
             <v-col cols="4" class="center-Elements-Flex">
-              <DeckSubdeckDropdownList :decks="decks" class="card-padding" @change-deck="changeDeck"
-                @change-subdeck="changeSubDeck" cols="6" :selectedDeckId="this.card.deckId"
-                :selectedsubdeckId="this.card.subdeckId" />
+              <DeckSubdeckDropdownList class="card-padding" @change-deck="changeDeck" @change-subdeck="changeSubDeck"
+                cols="6" :selectedDeckId="this.card.deckId" :selectedsubdeckId="this.card.subdeckId" />
+                
             </v-col>
             <v-col cols="2" class="center-Elements-Flex">
               <v-text-field counter maxlength="30" class="card-padding" placeholder="Question" variant="outlined"
@@ -45,7 +45,7 @@ import DeckSubdeckDropdownList from "@/components/molecules/DeckSubdeckDropdownL
 import { addCard } from "@/services/cards";
 import { useVuelidate } from "@vuelidate/core";
 import { required, helpers } from "@vuelidate/validators";
-import { decksStore } from "@/store/decks";
+import { useDecksStore } from "@/store/decks";
 
 export default {
   name: "CreateCardExpander",
@@ -56,8 +56,7 @@ export default {
   },
   data() {
     return {
-      decksStore: decksStore(),
-      decks: [],
+      decksStore: useDecksStore(),
       cardTypes: ["Basic"],
       panel: null,
       elevation: 0,
@@ -81,9 +80,6 @@ export default {
     };
   },
   async created() {
-    this.decks = this.decksStore.getDecks
-    console.log(this.decks)
-
     this.emitter.on("openExpander", (values) => {
       this.card.deckId = values.deckId;
       this.card.subdeckId = values.subdeckId;
@@ -109,15 +105,13 @@ export default {
       );
 
       if (cardResponse.response.success) {
-        const deck = this.decks.find(deck => deck.id === this.card.deckId);
-        const subdeck = deck.sub_deck.find(subdeck => subdeck.id === this.card.deckId);
-        subdeck.cards.push({
+        const card = {
           id: cardResponse.card.id,
           question: this.card.question,
           answer: this.card.answer,
-        })
-        
-        this.emitter.emit("reloadDecks", this.decks)
+        }
+        this.decksStore.insertCard(this.card.deckId, this.card.subdeckId, card)
+        this.emitter.emit("reloadCards");
         this.emitter.emit("alertBox", { title: "Card", message: "Criado com sucesso!", type: "success" });
 
       } else {
