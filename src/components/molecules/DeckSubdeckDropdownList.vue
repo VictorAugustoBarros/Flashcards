@@ -1,11 +1,6 @@
 <template>
   <!-- TODO: Ajustar o carregamento dos dados created/updated, clicar no botão do fantasma com o expander aberto e fechado -->
   <v-row>
-    {{ this.deckId }}
-    {{ this.subdeckId }}
-    --------
-    {{ this.selectedDeckId }}
-    {{ this.selectedsubdeckId }}
     <v-col :cols="cols">
       <DropdownList label="Decks" :items="decks" title="name" value="id" v-model="this.deckId"
         :error-messages="v$.deckId.$errors.map((e) => e.$message)" />

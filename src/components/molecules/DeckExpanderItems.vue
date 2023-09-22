@@ -1,15 +1,7 @@
 <template>
-  <v-expansion-panels>
-    <v-expansion-panel bg-color="transparent" elevation="0" flat>
-      <v-expansion-panel-title expand-icon="mdi-plus" collapse-icon="mdi-minus">
-        <v-spacer />
-        <v-col cols="1" class="center-Elements-Flex">
-          Deck
-        </v-col>
-        <v-spacer />
-      </v-expansion-panel-title>
-
-      <v-expansion-panel-text>
+  <v-sheet :elevation="5">
+    <v-row justify="center" class="pb-5">
+      <v-col cols="7">
         <v-row>
           <v-spacer></v-spacer>
           <v-col cols="5">
@@ -26,9 +18,10 @@
           </v-col>
           <v-spacer></v-spacer>
         </v-row>
-      </v-expansion-panel-text>
-    </v-expansion-panel>
-  </v-expansion-panels>
+      </v-col>
+    </v-row>
+    <v-divider></v-divider>
+  </v-sheet>
 </template>
 
 <script>
@@ -43,7 +36,7 @@ import { useVuelidate } from "@vuelidate/core";
 import { required, helpers } from "@vuelidate/validators";
 
 export default {
-  name: "CreateDeckExpander",
+  name: "DeckExpanderItems",
   components: {
     Button,
     DropdownList,

@@ -1,47 +1,36 @@
 <template>
-  <div class="center-Elements-Flex" style="overflow: auto;">
+  <div class="center-Elements-Flex" style=";height: 100%;">
     <v-sheet rounded="xl" width="95%" height="100%" class="sheet">
-      <v-row>
-        <v-col cols="6">
-          <CreateDeckExpander :decks="decks" @load-decks="loadDecks()" />
-        </v-col>
-        <v-col cols="6">
-          <CreateSubDeckExpander :decks="decks" @load-decks="loadDecks()" />
-        </v-col>
-      </v-row>
+      <div style="display: grid;height: 100%;">
+        <div style="position: sticky; top: 0px;" class="pb-7">
+          <DeckExpander />
+        </div>
 
-      <div style="height: 100%;padding-top: 50px;">
-        <v-row justify="center">
-          <v-breadcrumbs :items="items">
-            <template v-slot:divider>
-              <v-icon icon="mdi-chevron-right"></v-icon>
-            </template>
-          </v-breadcrumbs>
+        <v-row justify="center" style="overflow: auto;">
+          <div v-for="deck in decks" style="display: inline-block;" class="px-5 py-8">
+            <Deck :name="deck.name" :description="deck.description" />
+          </div>
         </v-row>
-        <br>
-
-        <DeckUserList :decks="decks" />
       </div>
     </v-sheet>
   </div>
 </template>
 
 <script>
-import CreateDeckExpander from "@/components/molecules/CreateDeckExpander.vue"
-import CreateSubDeckExpander from "@/components/molecules/CreateSubDeckExpander.vue"
-import DeckUserList from "@/components/molecules/DeckUserList.vue";
+import DeckExpander from "@/components/organisms/DeckExpander.vue"
+import Deck from "@/components/molecules/Deck.vue"
 
 import { getUserDecks } from "@/services/decks";
 
 export default {
   name: "DecksPage",
   components: {
-    CreateDeckExpander,
-    CreateSubDeckExpander,
-    DeckUserList,
+    DeckExpander,
+    Deck
   },
   data() {
     return {
+      tab: null,
       createDeck: false,
       decks: [],
       items: [

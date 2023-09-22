@@ -3,7 +3,7 @@
     <v-sheet rounded="xl" width="95%" height="100%" class="sheet">
       <div style="display: grid; grid-template-rows: auto 1fr; height: 100%;">
         <div>
-          <CreateCardExpander />
+          <CardExpander />
         </div>
         <div>
           <CardTemplate />
@@ -14,13 +14,13 @@
 </template>
 
 <script>
-import CreateCardExpander from "@/components/molecules/CreateCardExpander.vue";
+import CardExpander from "@/components/organisms/CardExpander.vue";
 import CardTemplate from "@/components/templates/CardTemplate.vue"
 
 export default {
   name: "CardsPage",
   components: {
-    CreateCardExpander,
+    CardExpander,
     CardTemplate
   }
 };

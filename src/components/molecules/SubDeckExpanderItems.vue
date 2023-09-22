@@ -1,15 +1,7 @@
 <template>
-  <v-expansion-panels>
-    <v-expansion-panel bg-color="transparent" elevation="0" flat>
-      <v-expansion-panel-title expand-icon="mdi-plus" collapse-icon="mdi-minus">
-        <v-spacer />
-        <v-col cols="1" class="center-Elements-Flex">
-          SubDeck
-        </v-col>
-        <v-spacer />
-      </v-expansion-panel-title>
-
-      <v-expansion-panel-text>
+  <v-sheet :elevation="5">
+    <v-row justify="center" class="pb-5">
+      <v-col cols="8">
         <v-row>
           <v-spacer></v-spacer>
           <v-col cols="3">
@@ -31,9 +23,10 @@
           </v-col>
           <v-spacer></v-spacer>
         </v-row>
-      </v-expansion-panel-text>
-    </v-expansion-panel>
-  </v-expansion-panels>
+      </v-col>
+    </v-row>
+    <v-divider></v-divider>
+  </v-sheet>
 </template>
 
 <script>
@@ -42,6 +35,7 @@ import DropdownList from "@/components/atoms/DropdownList.vue";
 import DeckSubdeckDropdownList from "@/components/molecules/DeckSubdeckDropdownList.vue";
 
 import { useAuthStore } from "@/store/app";
+import { useDecksStore } from "@/store/decks";
 import { addDeck } from "@/services/decks";
 import { addSubDeck } from "@/services/subdecks";
 import { useVuelidate } from "@vuelidate/core";
@@ -75,12 +69,11 @@ export default {
       },
     };
   },
-  props: {
-    decks: Array
-  },
   data() {
     return {
       authStore: useAuthStore(),
+      deckStore: useDecksStore(),
+      decks: [],
       elevationDeck: 0,
       isExpandedDeck: false,
       elevationSubDeck: 0,
@@ -97,6 +90,9 @@ export default {
         description: "",
       },
     };
+  },
+  created() {
+    this.decks = this.deckStore.getDecks
   },
   methods: {
     async createDeck() {
