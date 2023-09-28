@@ -97,7 +97,7 @@ export default {
 
       if (deckData.response.success) {
         this.emitter.emit("alertBox", { title: "Deck", message: "Deck criado com sucesso!", type: "success" });
-        this.$emit("loadDecks")
+        this.emitter.emit("reloadDeckList")
 
       } else {
         this.emitter.emit("alertBox", { title: "Deck", message: "Falha ao criar Deck!", type: "error" });

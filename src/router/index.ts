@@ -15,7 +15,7 @@ const routes = [
         path: "/how-it-works",
         name: "HowItWorks",
         component: () => import("@/views/HowItWorks.vue"),
-      },      
+      },
       {
         path: "/login",
         children: [
@@ -48,12 +48,24 @@ const routes = [
         component: () => import("@/views/Dashboard.vue"),
       },
       {
-        path: "decks",
-        name: "Decks",
+        path: "/decks",
+        name: "DecksPage",
         component: () => import("@/components/pages/DecksPage.vue"),
+        children: [
+          {
+            path: "",
+            name: "Decks",
+            component: () => import("@/components/templates/DecksTemplate.vue"),
+          },
+          {
+            path: "/subdecks",
+            name: "Subdecks",
+            component: () => import("@/components/templates/SubDecksTemplate.vue"),
+          }
+        ]
       },
       {
-        path: "cards",
+        path: "/cards",
         name: "Cards",
         component: () => import("@/components/pages/CardsPage.vue"),
       },
@@ -79,7 +91,7 @@ router.beforeEach((to, from, next) => {
   const authStore = useAuthStore();
   const decksStore = useDecksStore();
 
-  if (!decksStore.getDecks.length){
+  if (!decksStore.getDecks.length) {
     decksStore.loadDecks()
   }
 

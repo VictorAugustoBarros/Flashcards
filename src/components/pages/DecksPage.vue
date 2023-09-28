@@ -2,15 +2,19 @@
   <div class="center-Elements-Flex" style=";height: 100%;">
     <v-sheet rounded="xl" width="95%" height="100%" class="sheet">
       <div style="display: grid;height: 100%;">
-        <div style="position: sticky; top: 0px;" class="pb-7">
+        <div style="position: sticky; top: 0px;">
           <DeckExpander />
         </div>
 
-        <v-row justify="center" style="overflow: auto;">
-          <div v-for="deck in decks" style="display: inline-block;" class="px-5 py-8">
-            <Deck :name="deck.name" :description="deck.description" />
-          </div>
+        <v-row justify="center">
+          <v-breadcrumbs :items="items">
+            <template v-slot:divider>
+              <v-icon icon="mdi-chevron-right"></v-icon>
+            </template>
+          </v-breadcrumbs>
         </v-row>
+
+        <router-view />
       </div>
     </v-sheet>
   </div>
@@ -42,13 +46,18 @@ export default {
         {
           title: 'SubDecks',
           disabled: true,
-          href: 'breadcrumbs_link_1',
+          href: 'subdecks',
         }
       ],
     }
   },
   mounted() {
     this.loadDecks();
+  },
+  created() {
+    this.emitter.on("reloadDeckList", () => {
+      this.loadDecks()
+    })
   },
   methods: {
     async loadDecks() {

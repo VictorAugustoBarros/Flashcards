@@ -25,6 +25,7 @@
                     <v-col cols="3">
                         <v-text-field class="card-padding" placeholder="Pesquisar Deck" variant="outlined"
                             append-inner-icon="mdi-magnify"></v-text-field>
+                        <v-divider></v-divider>
                     </v-col>
                 </v-row>
             </v-window-item>
